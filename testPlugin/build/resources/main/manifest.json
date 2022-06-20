@@ -1,0 +1,13 @@
+{
+  "man-version": 1,
+  "global": {
+    "version": "1.0.0-SNAPSHOT"
+  },
+
+  "plugin": [
+    {
+      "id": "test",
+      "entrypoint": "de.utopiamc.test.Test"
+    }
+  ]
+}

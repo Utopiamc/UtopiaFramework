@@ -1,0 +1,4 @@
+name: UtopiaFramework-ServerImplementation
+version: 1.0
+main: de.utopiamc.framework.server.plugin.UtopiaFrameworkPlugin
+author: DevOskar

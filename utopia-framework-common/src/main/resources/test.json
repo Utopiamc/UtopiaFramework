@@ -1,0 +1,12 @@
+{
+  "version": "1",
+  "global": {
+    "version": "1.0.0"
+  },
+  "sources": [
+    {
+      "id": "test",
+      "entrypoint": "org.spongepowered.test.TestPlugin"
+    }
+  ]
+}

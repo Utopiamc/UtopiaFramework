@@ -1,0 +1,7 @@
+dependencies {
+    compileOnly project(':utopia-framework-api')
+}
+
+test {
+    useJUnitPlatform()
+}

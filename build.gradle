@@ -1,0 +1,37 @@
+group 'de.utopiamc'
+version '1.0-SNAPSHOT'
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+
+    apply from: "$rootProject.projectDir/dependencies.gradle"
+
+    group 'de.utopiamc'
+    version '1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        annotationProcessor libs.lombok
+
+        testImplementation testLibs.jupiterApi
+        testImplementation testLibs.jupiterEngine
+    }
+
+    configurations {
+        compileOnly.extendsFrom annotationProcessor
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}

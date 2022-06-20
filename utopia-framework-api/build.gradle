@@ -1,0 +1,31 @@
+plugins {
+    id 'maven-publish'
+}
+
+dependencies {
+    api libs.guice
+}
+
+publishing {
+    repositories {
+        maven {
+            Properties properties = new Properties()
+            def propertiesFile = project.rootProject.file('local.properties')
+            if (propertiesFile.exists()) {
+                properties.load(propertiesFile.newDataInputStream())
+            }
+
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Utopiamc/UtopiaFramework".toLowerCase())
+            credentials {
+                username = properties.get("github.username") ?: System.getenv("USERNAME")
+                password = properties.get("github.token") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}

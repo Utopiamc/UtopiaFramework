@@ -1,0 +1,22 @@
+{
+  "man-version": 1,
+  "global": {
+    "links": {
+      "name": "hallo"
+    },
+    "dependencies": [
+      {
+        "id": "utopia-framework-database",
+        "version": "1.0-SNAPSHOT"
+      }
+    ]
+  },
+
+  "plugin": [
+    {
+      "id": "hallo",
+      "version": "tim",
+      "entrypoint": "de.tim"
+    }
+  ]
+}

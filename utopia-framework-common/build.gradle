@@ -1,0 +1,18 @@
+dependencies {
+    api project(':utopia-framework-api')
+
+    implementation libs.gson
+}
+
+tasks.register('uberJar', Jar) {
+    archiveClassifier = 'uber'
+
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
