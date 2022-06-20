@@ -16,12 +16,17 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CommonDropInFactoryService implements DropInFactoryService {
+
+    @Inject
+    private Logger logger;
 
     private final ManifestParserService manifestParserService;
 
@@ -34,30 +39,36 @@ public class CommonDropInFactoryService implements DropInFactoryService {
     public Set<DropIn> makeDropIns(Set<File> files) {
         return files.stream()
                 .map(this::makeDropIn)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
     }
 
     private DropIn makeDropIn(File file) {
-        if (!file.getName().endsWith(JAR_FILE_EXTENSION))
-            throw new InvalidDropInFileException("Invalid dropin file format. Currently there are only JAR_FILES allowed. This will perhaps changed in a future release.");
-
         try {
-            ClassLoader cl = new URLClassLoader(new URL[]{new URL("jar:file:" + file.getAbsolutePath() + "!/")}, getClass().getClassLoader());
-            JarFile jarFile = new JarFile(file);
-            InputStream resource = cl.getResourceAsStream("manifest.json");
-            if (resource == null)
-                throw new InvalidDropInFileException(String.format("There is no dropin manifest in '%s'.", file.getName()));
+            if (!file.getName().endsWith(JAR_FILE_EXTENSION))
+                throw new InvalidDropInFileException("Invalid dropin file format. Currently there are only JAR_FILES allowed. This will perhaps changed in a future release.");
 
-            DropInManifest manifest = manifestParserService.parseManifest(resource);
+            try {
+                ClassLoader cl = new URLClassLoader(new URL[]{new URL("jar:file:" + file.getAbsolutePath() + "!/")}, getClass().getClassLoader());
+                JarFile jarFile = new JarFile(file);
+                InputStream resource = cl.getResourceAsStream("manifest.json");
+                if (resource == null)
+                    throw new InvalidDropInFileException(String.format("There is no dropin manifest in '%s'.", file.getName()));
 
-            DropIn dropIn = new DropIn(cl, jarFile, manifest);
+                DropInManifest manifest = manifestParserService.parseManifest(resource);
 
-            dropIn.make();
+                DropIn dropIn = new DropIn(cl, jarFile, manifest);
 
-            return dropIn;
-        } catch (IOException e) {
-            throw new InvalidDropInFileException(e);
+                dropIn.make();
+
+                return dropIn;
+            } catch (IOException e) {
+                throw new InvalidDropInFileException(e);
+            }
+        } catch (Throwable throwable) {
+            System.err.printf("Failed to enable DropIn '%s', The error was: %n", file.getName());
+            throwable.printStackTrace();
         }
-
+        return null;
     }
 }

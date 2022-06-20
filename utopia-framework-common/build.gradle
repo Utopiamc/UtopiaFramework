@@ -1,5 +1,6 @@
 dependencies {
     api project(':utopia-framework-api')
+    api libs.guice
 
     implementation libs.gson
 }

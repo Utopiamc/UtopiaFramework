@@ -6,7 +6,6 @@
 
   "plugin": [
     {
-      "id": "test",
       "entrypoint": "de.utopiamc.test.Test"
     }
   ]
