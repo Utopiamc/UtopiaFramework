@@ -6,6 +6,7 @@ allprojects {
     apply plugin: 'java-library'
 
     apply from: "$rootProject.projectDir/dependencies.gradle"
+    apply from: "$rootProject.projectDir/secrets.gradle"
 
     group 'de.utopiamc'
     version '1.0-SNAPSHOT'
