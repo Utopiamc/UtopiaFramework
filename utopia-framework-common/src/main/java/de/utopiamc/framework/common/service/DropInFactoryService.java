@@ -1,7 +1,7 @@
 package de.utopiamc.framework.common.service;
 
 import com.google.inject.ImplementedBy;
-import de.utopiamc.framework.common.dropin.DropIn;
+import de.utopiamc.framework.common.old.dropin.DropIn;
 import de.utopiamc.framework.common.service.impl.CommonDropInFactoryService;
 
 import java.io.File;

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<drop-in>
+    <modules>
+        <module>
+            <class>de.utopiamc.test.Module</class>
+        </module>
+    </modules>
+    <sources>
+        <source>
+            <root>de.utopiamc.test</root>
+        </source>
+    </sources>
+</drop-in>

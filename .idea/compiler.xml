@@ -2,19 +2,38 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.24/13a394eed5c4f9efb2a6d956e2086f1d81e857d9/lombok-1.18.24.jar" />
         </processorPath>
         <module name="utopia-framework.main" />
+        <module name="utopia-framework.modules.server-module.main" />
+        <module name="utopia-framework.tests.main" />
+        <module name="utopia-framework.utopia-framework-implementation-server.main" />
+        <module name="utopia-framework.utopia-framework-backend-worker.main" />
+        <module name="utopia-framework.utopia-framework-intellij-plugin.main" />
         <module name="utopia-framework.utopia-framework-common.main" />
         <module name="utopia-framework.utopia-framework-implementation-proxy.main" />
-        <module name="utopia-framework.testPlugin.main" />
-        <module name="utopia-framework.utopia-framework-implementation-server.main" />
+        <module name="utopia-framework.utopia-framework-server-api.main" />
+        <module name="utopia-framework.modules.game-module.main" />
         <module name="utopia-framework.utopia-framework-api.main" />
+        <module name="utopia-framework.modules.main" />
+        <module name="utopia-framework.testPlugin.main" />
+      </profile>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="utopia-framework-worker" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="utopia-framework-worker" options="-parameters" />
+    </option>
   </component>
 </project>

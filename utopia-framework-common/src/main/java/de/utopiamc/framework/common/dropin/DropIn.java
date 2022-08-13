@@ -1,70 +1,70 @@
 package de.utopiamc.framework.common.dropin;
 
-import de.utopiamc.framework.common.context.ApplicationContext;
-import de.utopiamc.framework.common.dropin.manifest.ManifestDropInSource;
+import com.google.inject.Binder;
+import com.google.inject.Module;
+import de.utopiamc.framework.api.dropin.DropInBinder;
+import de.utopiamc.framework.api.dropin.inject.ClassDetails;
+import de.utopiamc.framework.api.event.EventSubscription;
 import de.utopiamc.framework.api.event.FrameworkEvent;
-import lombok.Data;
-import lombok.ToString;
+import de.utopiamc.framework.common.context.ApplicationContext;
+import de.utopiamc.framework.common.models.JarFileIndex;
 
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.jar.JarFile;
+import java.util.logging.Logger;
 
-@Data
 public final class DropIn {
 
-    @ToString.Exclude private final ClassLoader classLoader;
-    @ToString.Exclude private final JarFile jarFile;
-    private final DropInManifest manifest;
+    private final Logger logger;
 
-    private DropInModule dropInModule;
-    private Set<DropInSource> sources;
+    private final Set<ClassDetails> classDetails;
+    private final Set<EventSubscription> eventSubscriptions;
 
-    public DropIn(ClassLoader classLoader, JarFile jarFile, DropInManifest manifest) {
-        this.classLoader = classLoader;
-        this.jarFile = jarFile;
-        this.manifest = manifest;
+    public DropIn(Set<ClassDetails> classDetails, JarFileIndex index) {
+        this.classDetails = classDetails;
+        this.eventSubscriptions = new HashSet<>();
 
-        this.sources = new HashSet<>();
+        this.logger = Logger.getLogger(index.name());
     }
 
+    public void configure(Binder binder) {
+        DropInBinder dropInBinder = new DropInBinder() {
+            @Override
+            public Binder binder() {
+                return binder;
+            }
 
-    public void make() {
-        scanSources();
-    }
+            @Override
+            public void addEventSubscription(EventSubscription eventSubscription) {
+                eventSubscriptions.add(eventSubscription);
+            }
+        };
 
-    public DropInModule createDropInModule() {
-        if (dropInModule == null)
-            dropInModule = new DropInModule(this);
-
-        return dropInModule;
-    }
-
-    private void scanSources() {
-        manifest.getSources().forEach(this::scanSource);
-    }
-
-    private void scanSource(ManifestDropInSource manifestSource) {
-        DropInSource source = new DropInSource(manifestSource, this);
-        source.scan();
-
-        sources.add(source);
-    }
-
-    public void bind(DropInModule module) {
-        sources.forEach(s -> s.bind(module));
-    }
-
-    //region EventDispatchable Implementation
-    public void dispatchEvent(FrameworkEvent event, ApplicationContext context) {
-        if (dropInModule == null)
-            throw new IllegalStateException();
-
-        for (Method listener : dropInModule.getListeners(event.getCompareableClass())) {
-            event.callMethod(listener, context.getGuiceInjector().getInstance(listener.getDeclaringClass()));
+        for (ClassDetails classDetail : classDetails) {
+            classDetail.bind(dropInBinder);
         }
     }
 
-    //endregion
+    public Module createDropInModule() {
+        return new DropInModule(this);
+    }
+
+    public void dispatchEvent(FrameworkEvent event, ApplicationContext context) {
+        for (EventSubscription eventSubscription : eventSubscriptions) {
+            if (event.isComparable(eventSubscription.getSubscribedEvent())) {
+                try {
+                    event.callMethod(eventSubscription.getMethod(),
+                            context.getGuiceInjector().
+                                    getInstance(eventSubscription.getMethod().getDeclaringClass()));
+                }catch (Throwable t) {
+                    logger.severe(String.format("Failed to dispatch event. '%s' thrown an exception. %s", eventSubscription.getMethod().getName(), t.getMessage()));
+                    t.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void disable() {
+
+    }
 }

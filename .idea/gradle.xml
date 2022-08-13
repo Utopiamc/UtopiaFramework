@@ -4,16 +4,26 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="true" />
+        <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="corretto-17" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/modules" />
+            <option value="$PROJECT_DIR$/modules/game-module" />
+            <option value="$PROJECT_DIR$/modules/server-module" />
             <option value="$PROJECT_DIR$/testPlugin" />
+            <option value="$PROJECT_DIR$/tests" />
             <option value="$PROJECT_DIR$/utopia-framework-api" />
+            <option value="$PROJECT_DIR$/utopia-framework-backend-worker" />
             <option value="$PROJECT_DIR$/utopia-framework-common" />
             <option value="$PROJECT_DIR$/utopia-framework-implementation-proxy" />
             <option value="$PROJECT_DIR$/utopia-framework-implementation-server" />
+            <option value="$PROJECT_DIR$/utopia-framework-intellij-plugin" />
+            <option value="$PROJECT_DIR$/utopia-framework-server-api" />
           </set>
         </option>
       </GradleProjectSettings>

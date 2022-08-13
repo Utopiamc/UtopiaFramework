@@ -1,18 +1,21 @@
 package de.utopiamc.framework.server.service;
 
+import com.google.inject.Inject;
 import de.utopiamc.framework.common.exceptions.InvalidDropInFileException;
 import de.utopiamc.framework.common.service.DropInFactoryService;
 import de.utopiamc.framework.common.service.DropInFileService;
-import de.utopiamc.framework.server.plugin.UtopiaFrameworkPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class ServerDropInFileService implements DropInFileService {
+
+    @Inject
+    private Logger logger;
 
     @Override
     public Set<File> getDropInFiles() {
@@ -27,9 +30,13 @@ public class ServerDropInFileService implements DropInFileService {
             throw new InvalidDropInFileException(String.format(NOT_A_DIRECTORY, path));
         }
 
-        return Arrays.stream(file.listFiles())
+        Set<File> collect = Arrays.stream(file.listFiles())
                 .filter(f -> f.getName().endsWith(DropInFactoryService.JAR_FILE_EXTENSION))
                 .collect(Collectors.toSet());
+
+        logger.log(Level.INFO, String.format("Found %s possible drop-ins in '%s'.", collect.size(), path));
+
+        return collect;
     }
 
 }

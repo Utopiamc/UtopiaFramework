@@ -1,0 +1,49 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified">
+    <xs:element name="drop-in" type="Model">
+        <xs:annotation>
+            <xs:documentation source="version">1.0+</xs:documentation>
+            <xs:documentation source="description">
+                Declaration of the Drop-In.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:complexType name="Model">
+        <xs:all>
+            <xs:element name="modules" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation source="description">
+                        List of declared modules. Each module should have one class associated with it.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="module" minOccurs="0" maxOccurs="unbounded" type="Module">
+                            <xs:annotation>
+                                <xs:documentation source="description">
+                                    Declaration of one module. Each module should have one class associated with it.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="sources">
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element name="source" type="Source"/>
+                    </xs:all>
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="Module">
+        <xs:all>
+            <xs:element name="class" type="xs:string"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="Source">
+        <xs:all>
+            <xs:element name="root" type="xs:string"/>
+        </xs:all>
+    </xs:complexType>
+</xs:schema>

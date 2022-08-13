@@ -1,0 +1,92 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "de.utopiamc",
+    "module": "utopia-framework-server-api",
+    "version": "1.0-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.2"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "de.utopiamc",
+          "module": "utopia-framework-api",
+          "version": {
+            "requires": "1.0-SNAPSHOT"
+          }
+        },
+        {
+          "group": "io.papermc.paper",
+          "module": "paper-api",
+          "version": {
+            "requires": "1.18.2-R0.1-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "utopia-framework-server-api-1.0-SNAPSHOT.jar",
+          "url": "utopia-framework-server-api-1.0-SNAPSHOT.jar",
+          "size": 8054,
+          "sha512": "22a8ae7079e8461dc2e1a697cbf9b237138462f6af4acd2167f8d410652269e1c7e68cb6d0e54c726057e56641bca4a3804d6647d269e8e1423a0c8418a91139",
+          "sha256": "75f39ff358b1d44f934bc941c5327b81f3d94ddaaee141e792661dda008e4af0",
+          "sha1": "3a6bb3785621db089b87af10e151b088136a596a",
+          "md5": "1a230db3d6f7689bef3bbb9e4a4cbce0"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "de.utopiamc",
+          "module": "utopia-framework-api",
+          "version": {
+            "requires": "1.0-SNAPSHOT"
+          }
+        },
+        {
+          "group": "io.papermc.paper",
+          "module": "paper-api",
+          "version": {
+            "requires": "1.18.2-R0.1-SNAPSHOT"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "utopia-framework-server-api-1.0-SNAPSHOT.jar",
+          "url": "utopia-framework-server-api-1.0-SNAPSHOT.jar",
+          "size": 8054,
+          "sha512": "22a8ae7079e8461dc2e1a697cbf9b237138462f6af4acd2167f8d410652269e1c7e68cb6d0e54c726057e56641bca4a3804d6647d269e8e1423a0c8418a91139",
+          "sha256": "75f39ff358b1d44f934bc941c5327b81f3d94ddaaee141e792661dda008e4af0",
+          "sha1": "3a6bb3785621db089b87af10e151b088136a596a",
+          "md5": "1a230db3d6f7689bef3bbb9e4a4cbce0"
+        }
+      ]
+    }
+  ]
+}

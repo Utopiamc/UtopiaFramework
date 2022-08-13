@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly project(':utopia-framework-api')
+    compileOnly project(':utopia-framework-server-api')
 }
 
 test {

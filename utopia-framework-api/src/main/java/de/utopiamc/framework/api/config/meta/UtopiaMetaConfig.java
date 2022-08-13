@@ -34,13 +34,21 @@ public interface UtopiaMetaConfig extends UtopiaConfiguration {
 
 
     /**
-     * The prefix is appended before each message of the framework.
+     * The prefix is appended before each message of the framework. When not configured, it will fall back to "{@link #title(String)} + •".
      * @param prefix The prefix should not be longer than 16 characters, color variables can be used ($p, $s, $e, $r).
      * @return This instance (builder pattern)
      */
     UtopiaMetaConfig prefix(String prefix);
 
+    /**
+     * The title is used (unless otherwise configured) in places such as the prefix or the title of the scoreboard.
+     * @param title The title should not be longer than 16 characters, color variables can be used ($p, $s, $e, $r).
+     * @return This instance (builder pattern)
+     */
+    UtopiaMetaConfig title(String title);
+
     String getPrefix();
+    String getTitle();
     char getPrimaryColor();
     char getSecondaryColor();
     char getTextColor();

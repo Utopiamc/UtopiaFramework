@@ -65,7 +65,7 @@ package de.utopiamc.demo;
 import de.utopiamc.framework.api.event.FrameworkPlayerJoinEvent;
 import de.utopiamc.framework.api.event.Subscribe;
 import de.utopiamc.framework.api.event.qualifier.Player;
-import de.utopiamc.framework.api.inject.components.Controller;
+import de.utopiamc.framework.api.stereotype.Controller;
 import de.utopiamc.framework.api.inject.components.DropIn;
 
 @DropIn

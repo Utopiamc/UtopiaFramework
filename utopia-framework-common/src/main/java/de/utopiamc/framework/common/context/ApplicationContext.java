@@ -1,57 +1,57 @@
 package de.utopiamc.framework.common.context;
 
-import com.google.inject.*;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Module;
 import de.utopiamc.framework.api.context.Context;
-import de.utopiamc.framework.common.config.CommonConfigurationModule;
-import de.utopiamc.framework.common.dropin.DisableDropInReason;
-import de.utopiamc.framework.common.dropin.DropIn;
-import de.utopiamc.framework.common.dropin.DropInSource;
-import de.utopiamc.framework.common.dropin.manifest.ManifestDependency;
-import de.utopiamc.framework.common.events.EventDispatchable;
 import de.utopiamc.framework.api.event.FrameworkEvent;
+import de.utopiamc.framework.common.config.CommonConfigurationModule;
+import de.utopiamc.framework.common.dropin.DropIn;
+import de.utopiamc.framework.common.events.EventDispatchable;
 import de.utopiamc.framework.common.inject.FrameworkModule;
-import de.utopiamc.framework.common.util.EventUtil;
+import de.utopiamc.framework.common.models.TempEventSubscription;
+import de.utopiamc.framework.common.old.dropin.DisableDropInReason;
+import de.utopiamc.framework.common.old.dropin.DropInSource;
+import de.utopiamc.framework.common.service.EventConverterService;
 
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class ApplicationContext implements Context, DropInHoldable, EventDispatchable {
 
     @Inject
     private static Logger logger;
-
     private final Set<DropIn> dropIns;
     private final Injector guiceInjector;
+    private final EventConverterService eventConverter;
+
+    private final Set<TempEventSubscription<?>> tempEventSubscriptions;
 
     public ApplicationContext(Set<DropIn> dropIns) {
+        this(dropIns, List.of());
+    }
+
+    public ApplicationContext(Set<DropIn> dropIns, List<Module> modulesList) {
         this.dropIns = dropIns;
+        this.tempEventSubscriptions = new HashSet<>();
 
         // Post Setup DropIns
-        validateDropInDependencies();
 
         // Setup Guice
-        Set<Module> modules = generateModules();
+        Set<Module> modules = generateModules(modulesList);
         guiceInjector = createInjector(modules);
+
+        eventConverter = getEventConverter();
     }
 
     public void disable() {
-
+        dropIns.forEach(DropIn::disable);
     }
 
     //region DropIn Stuff
-    private void validateDropInDependencies() {
-        for (DropInSource dropInSource : getDropInSources()) {
-            for (ManifestDependency dependency : dropInSource.getSource().getDependencies()) {
-                if (dependency.getRequired() && getById(dependency.getId()).isEmpty())
-                    disableDropIn(dropInSource, DisableDropInReason.REQUIRED_DEPENDENCY_NOT_FOUND.setMsg(String.format("Required dependency '%s' for '%s' not found. Disable dropin source.", dependency.getId(), dropInSource.getId())));
-            }
-        }
-    }
-
     private void disableDropIn(DropInSource dropInSource, DisableDropInReason reason) {
         dropInSource.disable();
 
@@ -60,8 +60,8 @@ public class ApplicationContext implements Context, DropInHoldable, EventDispatc
     //endregion
 
     //region Guice Stuff
-    private Set<Module> generateModules() {
-        Set<Module> modules = new HashSet<>();
+    private Set<Module> generateModules(List<Module> modulesList) {
+        Set<Module> modules = new HashSet<>(modulesList);
 
         modules.add(new FrameworkModule(this));
         modules.add(new CommonConfigurationModule());
@@ -78,29 +78,19 @@ public class ApplicationContext implements Context, DropInHoldable, EventDispatc
 
     //region DropInHoldable Implementation
     @Override
-    public Optional<DropInSource> getById(String id) {
-        return dropIns.stream()
-                .flatMap(d -> d.getSources().stream())
-                .filter(s -> s.getId().equals(id))
-                .findFirst();
-    }
-
-    @Override
     public Set<DropIn> getDropIns() {
         return dropIns;
     }
 
-    @Override
-    public Set<DropInSource> getDropInSources() {
-        return dropIns.stream()
-                .flatMap(d -> d.getSources().stream())
-                .collect(Collectors.toSet());
-    }
     //endregion
 
     //region EventDispatchable Implementation
     public void dispatchEvent(Object event) {
-        dispatchEvent(EventUtil.convertToFrameworkEvent(event));
+        dispatchEvent(eventConverter.convertEvent(event));
+    }
+
+    public EventConverterService getEventConverter() {
+        return guiceInjector.getInstance(EventConverterService.class);
     }
 
     @Override
@@ -112,4 +102,13 @@ public class ApplicationContext implements Context, DropInHoldable, EventDispatc
     public Injector getGuiceInjector() {
         return guiceInjector;
     }
+
+    public void addTempEventSubscription(TempEventSubscription<?> eventSubscription) {
+        tempEventSubscriptions.add(eventSubscription);
+    }
+
+    public void removeTempEventSubscription(TempEventSubscription<?> eventSubscription) {
+        tempEventSubscriptions.remove(eventSubscription);
+    }
+
 }

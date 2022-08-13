@@ -1,0 +1,88 @@
+{
+  "config": {
+    "loginConfigurations": [
+      {
+        "targetGroup": "Proxy",
+        "maintenance": true,
+        "maxPlayers": 800,
+        "whitelist": [],
+        "motds": [
+          {
+            "firstLine": "   &r&8» &c&lUtopia &r&8| &e&lMinigame Network &r&8| &b&l1.8&r&7-&b&l1.18 &r&8«",
+            "secondLine": "        &a&l&k1 &c&lNEU &8• &6&lChallenges V2 Update &8• &c&lNEU &a&l&k1",
+            "autoSlot": false,
+            "autoSlotMaxPlayersDistance": 1,
+            "playerInfo": [
+              " ",
+              "&c§lUtopiamc.de §7» §bChallenges Update",
+              " ",
+              "&7TS &7» &butopiamc.de",
+              "&7Discord &7» &bhttps://discord.gg/qUt7a9KGQ2",
+              " "
+            ],
+            "protocolText": null
+          },
+          {
+            "firstLine": "   &r&8» &c&lUtopia &r&8| &e&lMinigame Network &r&8| &b&l1.8&r&7-&b&l1.18 &r&8«",
+            "secondLine": "             &4&l&k1 &e&lNEU &8• &c&lFFA &8• &e&lNEU &4&l&k1",
+            "autoSlot": false,
+            "autoSlotMaxPlayersDistance": 1,
+            "playerInfo": [
+              " ",
+              "&c§lUtopiamc.de §7» §bChallenges Update",
+              " ",
+              "&7TS &7» &butopiamc.de",
+              "&7Discord &7» &bhttps://discord.gg/qUt7a9KGQ2",
+              " "
+            ],
+            "protocolText": null
+          },
+          {
+            "firstLine": "   &r&8» &c&lUtopia &r&8| &e&lMinigame Network &r&8| &b&l1.8&r&7-&b&l1.18 &r&8«",
+            "secondLine": "         &6Bewerben: §7https://enroll.utopiamc.de",
+            "autoSlot": false,
+            "autoSlotMaxPlayersDistance": 1,
+            "playerInfo": [
+              " ",
+              "&c§lUtopiamc.de §7» §bChallenges Update",
+              " ",
+              "&7TS &7» &butopiamc.de",
+              "&7Discord &7» &bhttps://discord.gg/qUt7a9KGQ2",
+              " "
+            ],
+            "protocolText": null
+          }
+        ],
+        "maintenanceMotds": [
+          {
+            "firstLine": "       &r&8» &c&lUtopia &r&8| &e&lMinigame Network &r&8| &b&l1.8&r&7-&b&l1.18 &r&8«",
+            "secondLine": "               &7Für einige Updates in &cWartungen",
+            "autoSlot": false,
+            "autoSlotMaxPlayersDistance": 1,
+            "playerInfo": [],
+            "protocolText": "&7» &cWartungen    §r"
+          }
+        ]
+      }
+    ],
+    "tabListConfigurations": [
+      {
+        "targetGroup": "Proxy",
+        "entries": [
+          {
+            "header": " \n&8» &c&lUtopia &8«\n",
+            "footer": " \n &cStore &8» &b/store\n &7Benutze &5/party &6/clan &7und &a/friend \n"
+          }
+        ],
+        "animationsPerSecond": 1.0
+      }
+    ],
+    "messages": {
+      "player-login-full-server": "§c§lUtopia §7» §cTut uns leid, aber der Server ist gerade voll!",
+      "player-login-not-whitelisted": "&c&lUtopia &7» &cTut uns leid, aber wir sind gerade in Wartungsareiten!",
+      "service-start": "&c&lUtopia &7» &7Der Server &a%service% &7startet auf &e%node% &7...",
+      "service-stop": "&c&lUtopia &7» &7Der Server &c%service% &7stoppt gerade auf &e%node%&7..."
+    },
+    "ingameServiceStartStopMessages": true
+  }
+}

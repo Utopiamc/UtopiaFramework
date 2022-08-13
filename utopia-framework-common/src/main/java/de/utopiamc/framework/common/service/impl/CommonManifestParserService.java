@@ -1,11 +1,9 @@
 package de.utopiamc.framework.common.service.impl;
 
-import de.utopiamc.framework.common.dropin.DropInManifest;
-import de.utopiamc.framework.common.dropin.manifest.JSONManifestParser;
-import de.utopiamc.framework.common.dropin.manifest.Parser;
+import de.utopiamc.framework.common.old.dropin.DropInManifest;
+import de.utopiamc.framework.common.old.dropin.manifest.JSONManifestParser;
 import de.utopiamc.framework.common.service.ManifestParserService;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 

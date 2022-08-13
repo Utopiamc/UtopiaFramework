@@ -5,6 +5,8 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
     implementation project(':utopia-framework-common')
+    implementation project(':utopia-framework-server-api')
+    implementation 'org.reflections:reflections:0.10.2'
 }
 
 tasks.register('uberJar', Jar) {

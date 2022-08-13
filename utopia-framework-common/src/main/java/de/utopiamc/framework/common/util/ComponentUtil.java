@@ -1,14 +1,14 @@
 package de.utopiamc.framework.common.util;
 
-import de.utopiamc.framework.api.inject.components.Configuration;
-import de.utopiamc.framework.api.inject.components.Controller;
-import de.utopiamc.framework.api.inject.components.Plugin;
-import de.utopiamc.framework.common.dropin.sourcetypes.mapper.ConfigurationSourceTypeMapper;
-import de.utopiamc.framework.common.dropin.sourcetypes.mapper.ControllerSourceTypeMapper;
-import de.utopiamc.framework.common.dropin.DropInSourceComponent;
-import de.utopiamc.framework.common.dropin.sourcetypes.SourceType;
-import de.utopiamc.framework.common.dropin.sourcetypes.mapper.PluginSourceTypeMapper;
-import de.utopiamc.framework.common.dropin.sourcetypes.mapper.SourceTypeMapper;
+import de.utopiamc.framework.api.stereotype.Configuration;
+import de.utopiamc.framework.api.stereotype.Controller;
+import de.utopiamc.framework.api.stereotype.Plugin;
+import de.utopiamc.framework.common.old.dropin.sourcetypes.mapper.ConfigurationSourceTypeMapper;
+import de.utopiamc.framework.common.old.dropin.sourcetypes.mapper.ControllerSourceTypeMapper;
+import de.utopiamc.framework.common.old.dropin.DropInSourceComponent;
+import de.utopiamc.framework.common.old.dropin.sourcetypes.SourceType;
+import de.utopiamc.framework.common.old.dropin.sourcetypes.mapper.PluginSourceTypeMapper;
+import de.utopiamc.framework.common.old.dropin.sourcetypes.mapper.SourceTypeMapper;
 import lombok.experimental.UtilityClass;
 
 import java.lang.annotation.Annotation;

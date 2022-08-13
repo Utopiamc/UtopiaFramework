@@ -9,6 +9,7 @@ public class UtopiaMetaConfigImpl implements UtopiaMetaConfig {
     private char textColor;
     private char errorColor;
     private String prefix;
+    private String title;
 
     @Override
     public UtopiaMetaConfig primaryColor(char color) {
@@ -41,6 +42,12 @@ public class UtopiaMetaConfigImpl implements UtopiaMetaConfig {
     }
 
     @Override
+    public UtopiaMetaConfig title(String title) {
+        this.title = title;
+        return this;
+    }
+
+    @Override
     public String getPrefix() {
         return prefix;
     }
@@ -65,4 +72,8 @@ public class UtopiaMetaConfigImpl implements UtopiaMetaConfig {
         return errorColor;
     }
 
+    @Override
+    public String getTitle() {
+        return title;
+    }
 }

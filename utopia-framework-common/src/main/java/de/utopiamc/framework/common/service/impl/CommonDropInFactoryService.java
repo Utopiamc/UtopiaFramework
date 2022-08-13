@@ -1,24 +1,16 @@
 package de.utopiamc.framework.common.service.impl;
 
-import de.utopiamc.framework.common.dropin.DropIn;
-import de.utopiamc.framework.common.dropin.DropInManifest;
+import de.utopiamc.framework.common.old.dropin.DropIn;
 import de.utopiamc.framework.common.exceptions.InvalidDropInFileException;
 import de.utopiamc.framework.common.service.DropInFactoryService;
-import de.utopiamc.framework.common.service.DropInFileService;
-import de.utopiamc.framework.common.service.ManifestParserService;
-import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -27,13 +19,6 @@ public class CommonDropInFactoryService implements DropInFactoryService {
 
     @Inject
     private Logger logger;
-
-    private final ManifestParserService manifestParserService;
-
-    @Inject
-    public CommonDropInFactoryService(ManifestParserService manifestParserService) {
-        this.manifestParserService = manifestParserService;
-    }
 
     @Override
     public Set<DropIn> makeDropIns(Set<File> files) {
@@ -46,27 +31,18 @@ public class CommonDropInFactoryService implements DropInFactoryService {
     private DropIn makeDropIn(File file) {
         try {
             if (!file.getName().endsWith(JAR_FILE_EXTENSION))
-                throw new InvalidDropInFileException("Invalid dropin file format. Currently there are only JAR_FILES allowed. This will perhaps changed in a future release.");
+                throw new InvalidDropInFileException("Invalid drop in file format. There are only JAR_FILES allowed.");
 
             try {
                 ClassLoader cl = new URLClassLoader(new URL[]{new URL("jar:file:" + file.getAbsolutePath() + "!/")}, getClass().getClassLoader());
                 JarFile jarFile = new JarFile(file);
-                InputStream resource = cl.getResourceAsStream("manifest.json");
-                if (resource == null)
-                    throw new InvalidDropInFileException(String.format("There is no dropin manifest in '%s'.", file.getName()));
 
-                DropInManifest manifest = manifestParserService.parseManifest(resource);
-
-                DropIn dropIn = new DropIn(cl, jarFile, manifest);
-
-                dropIn.make();
-
-                return dropIn;
+                return new DropIn(cl, jarFile);
             } catch (IOException e) {
                 throw new InvalidDropInFileException(e);
             }
         } catch (Throwable throwable) {
-            System.err.printf("Failed to enable DropIn '%s', The error was: %n", file.getName());
+            System.err.printf("Failed to enable DropIn '%s', The error was: ", file.getName());
             throwable.printStackTrace();
         }
         return null;

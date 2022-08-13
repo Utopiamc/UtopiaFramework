@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<drop-in>
+    <sources>
+        <source>
+            <root>de.utopiamc.framework.module.server</root>
+        </source>
+    </sources>
+</drop-in>

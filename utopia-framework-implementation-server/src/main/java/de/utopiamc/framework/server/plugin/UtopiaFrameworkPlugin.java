@@ -1,12 +1,14 @@
 package de.utopiamc.framework.server.plugin;
 
-import de.utopiamc.framework.api.event.LifecycleEvent;
-import de.utopiamc.framework.api.event.OnDisableEvent;
-import de.utopiamc.framework.api.event.OnEnableEvent;
-import de.utopiamc.framework.api.event.OnLoadEvent;
+import de.utopiamc.framework.api.event.lifecycle.LifecycleEvent;
+import de.utopiamc.framework.api.event.lifecycle.OnDisableEvent;
+import de.utopiamc.framework.api.event.lifecycle.OnEnableEvent;
+import de.utopiamc.framework.api.event.lifecycle.OnLoadEvent;
 import de.utopiamc.framework.common.bootstrap.BootstrapContext;
 import de.utopiamc.framework.common.context.ApplicationContext;
 import de.utopiamc.framework.server.bootstrap.ServerBootstrapModule;
+import de.utopiamc.framework.server.inject.ServerModule;
+import de.utopiamc.framework.server.listener.ServerListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class UtopiaFrameworkPlugin extends JavaPlugin {
@@ -23,9 +25,11 @@ public class UtopiaFrameworkPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        System.out.println("HI");
         bootstrap();
 
         callSecureLifecycleEvent(new OnEnableEvent());
+        registerEventListener();
     }
 
     @Override
@@ -41,6 +45,7 @@ public class UtopiaFrameworkPlugin extends JavaPlugin {
         if (!isBootstrapped) {
             BootstrapContext bootstrapContext = new BootstrapContext();
             bootstrapContext.addModule(new ServerBootstrapModule());
+            bootstrapContext.addProdModule(new ServerModule());
 
             applicationContext = bootstrapContext.createApplicationContext();
 
@@ -51,6 +56,16 @@ public class UtopiaFrameworkPlugin extends JavaPlugin {
     private void callSecureLifecycleEvent(LifecycleEvent event) {
         if (applicationContext != null)
             applicationContext.dispatchEvent(event);
+    }
+
+    private void registerEventListener() {
+        try {
+            if (applicationContext == null) return;
+            ServerListener instance = applicationContext.getGuiceInjector().getInstance(ServerListener.class);
+            instance.register(this);
+        }catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
 }

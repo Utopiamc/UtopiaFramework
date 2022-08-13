@@ -10,11 +10,11 @@ public class EventSubscription {
     private final Class<?> subscribedEvent;
     private final Method method;
 
-    public boolean hasSubscribedTo(Class<?> event) {
-        return subscribedEvent.isAssignableFrom(event);
-    }
-
     public Method getMethod() {
         return method;
+    }
+
+    public Class<?> getSubscribedEvent() {
+        return subscribedEvent;
     }
 }

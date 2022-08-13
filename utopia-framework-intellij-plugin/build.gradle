@@ -1,0 +1,19 @@
+plugins {
+    id 'org.jetbrains.intellij' version '1.6.0'
+}
+
+intellij {
+    version = '2021.3.2'
+
+    plugins.addAll(
+            "java",
+            "maven",
+            "gradle"
+    )
+}
+
+patchPluginXml {
+    changeNotes = """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>"""
+}

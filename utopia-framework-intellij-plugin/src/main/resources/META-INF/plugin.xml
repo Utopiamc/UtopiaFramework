@@ -1,0 +1,26 @@
+<idea-plugin>
+    <id>de.utopiamc.utopia-framework-intellij-plugin</id>
+    <name>Utopia Framework</name>
+    <vendor email="support@utopiamc.de" url="https://www.utopiamc.de">UtopiaMC</vendor>
+
+    <description><![CDATA[
+    Supportive Plugin for the Utopia Framework.
+
+    Supports:
+    <ul>
+        <li>Module creation</li>
+    </ul>
+    ]]></description>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+       <moduleType id="UTOPIA-FRAMEWORK-MODULE" implementationClass="de.utopiamc.framework.module.UtopiaFrameworkModule"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>

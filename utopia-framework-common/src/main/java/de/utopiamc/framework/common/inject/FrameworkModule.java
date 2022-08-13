@@ -16,6 +16,9 @@ public class FrameworkModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Context.class).toInstance(context);
+        bind(ApplicationContext.class).toInstance(context);
+
+        install(new CommonApisModule());
 
         requestStaticInjection(CandidateQueueUtil.class);
     }

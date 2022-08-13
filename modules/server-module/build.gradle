@@ -1,0 +1,3 @@
+dependencies {
+    api project(":utopia-framework-server-api")
+}
