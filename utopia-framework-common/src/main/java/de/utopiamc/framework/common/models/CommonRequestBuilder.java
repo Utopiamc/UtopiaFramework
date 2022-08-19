@@ -67,6 +67,7 @@ public class CommonRequestBuilder implements RequestBuilder {
             case "patch" -> builder.patch(body);
             case "put" -> builder.put(body);
             case "head" -> builder.head();
+            default -> builder.get();
         };
     }
 

@@ -21,7 +21,7 @@ public class RequestConfigProvider implements Provider<RequestConfig> {
     @Override
     public RequestConfig get() {
         if (cachedConfig == null) {
-            RequestConfig config = new RequestConfigImpl("http://localhost", 8080);
+            RequestConfig config = new RequestConfigImpl("localhost", 8080);
             requestConfigurations.forEach(c -> c.configure(config));
             cachedConfig = config;
         }
