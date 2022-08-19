@@ -1,6 +1,7 @@
 package de.utopiamc.framework.common.models;
 
 import com.google.gson.Gson;
+import de.utopiamc.framework.api.config.request.RequestConfig;
 import de.utopiamc.framework.api.model.RequestBodyType;
 import de.utopiamc.framework.api.model.RequestBuilder;
 import okhttp3.*;
@@ -16,14 +17,14 @@ public class CommonRequestBuilder implements RequestBuilder {
 
     private RequestBody body;
 
-    public CommonRequestBuilder(String method, String path, OkHttpClient client) {
+    public CommonRequestBuilder(String method, String path, OkHttpClient client, RequestConfig config) {
         this.client = client;
         this.method = method;
 
         this.httpUrl = new HttpUrl.Builder()
-                .host("localhost")
+                .host(config.getHost())
+                .port(config.getPort())
                 .scheme("http")
-                .port(8080)
                 .encodedPath(path);
     }
 
