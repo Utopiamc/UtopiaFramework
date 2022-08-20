@@ -1,18 +1,20 @@
 package de.utopiamc.framework.api.entity;
 
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
+
+import java.util.Date;
+import java.util.UUID;
 
 public class ServerFrameworkPlayer extends FrameworkPlayer {
 
-    private final Player player;
+    private final OfflinePlayer player;
 
-    public ServerFrameworkPlayer(Player player) {
-        super(player.getUniqueId(), player.getName());
-
+    public ServerFrameworkPlayer(UUID uuid, String name, Date firstJoined, OfflinePlayer player) {
+        super(uuid, name, firstJoined);
         this.player = player;
     }
 
-    public Player getPlayer() {
+    public OfflinePlayer getPlayer() {
         return player;
     }
 }
