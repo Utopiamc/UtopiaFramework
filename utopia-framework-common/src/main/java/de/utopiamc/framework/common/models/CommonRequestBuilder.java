@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import de.utopiamc.framework.api.config.request.RequestConfig;
 import de.utopiamc.framework.api.model.RequestBodyType;
 import de.utopiamc.framework.api.model.RequestBuilder;
+import de.utopiamc.framework.api.model.RequestResponse;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -50,6 +51,32 @@ public class CommonRequestBuilder implements RequestBuilder {
     @Override
     public String execute() throws IOException {
         return exec().body().string();
+    }
+
+    @Override
+    public RequestResponse response() throws IOException {
+        Response exec = exec();
+        return new RequestResponse() {
+            @Override
+            public int statusCode() {
+                return exec.code();
+            }
+
+            @Override
+            public <T> T body(Class<T> entity) {
+                Gson gson = new Gson();
+                return gson.fromJson(exec.body().charStream(), entity);
+            }
+
+            @Override
+            public String body() {
+                try {
+                    return exec.body().string();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
     }
 
     private Response exec() throws IOException {

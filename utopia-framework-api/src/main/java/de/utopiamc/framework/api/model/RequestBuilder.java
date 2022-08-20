@@ -12,4 +12,5 @@ public interface RequestBuilder {
 
     String execute() throws IOException;
 
+    RequestResponse response() throws IOException;
 }
