@@ -8,6 +8,7 @@ import de.utopiamc.framework.api.model.RequestResponse;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 public class CommonRequestBuilder implements RequestBuilder {
 
@@ -42,10 +43,10 @@ public class CommonRequestBuilder implements RequestBuilder {
     }
 
     @Override
-    public <T> T execute(Class<T> entity) throws IOException {
+    public <T> T execute(Type typeOfT) throws IOException {
         Response exec = exec();
         Gson gson = new Gson();
-        return gson.fromJson(exec.body().charStream(), entity);
+        return gson.fromJson(exec.body().charStream(), typeOfT);
     }
 
     @Override

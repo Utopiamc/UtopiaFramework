@@ -13,21 +13,21 @@ public class CommonEconomy implements Economy {
 
     @Override
     public UUID id() {
-        return null;
+        return id;
     }
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override
     public String getSymbol() {
-        return null;
+        return symbol;
     }
 
     @Override
     public Short getGlobalValue() {
-        return null;
+        return value;
     }
 }

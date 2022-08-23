@@ -1,6 +1,7 @@
 package de.utopiamc.framework.api.model;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 public interface RequestBuilder {
 
@@ -8,7 +9,7 @@ public interface RequestBuilder {
 
     RequestBuilder body(Object obj, RequestBodyType type);
 
-    <T> T execute(Class<T> entity) throws IOException;
+    <T> T execute(Type typeOfT) throws IOException;
 
     String execute() throws IOException;
 
