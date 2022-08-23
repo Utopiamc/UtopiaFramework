@@ -328,22 +328,54 @@ public class CommonEconomyService implements EconomyService {
         Assertions.assertNonNull(economy, "Economy should not be null.");
         Assertions.assertNonNull(from, "Holder should not be null.");
         Assertions.assertNonNull(to, "Holder should not be null.");
-        return false;
+
+        return transfer(amount, economy.id(), from.getUuid(), to.getUuid());
     }
 
     @Override
     public boolean transfer(Double amount, Economy economy, UUID from, UUID to) {
-        return false;
+        Assertions.assertNonNull(amount, "Value should not be null.");
+        Assertions.assertFalse(amount<=0, "Value not should be lower than 0.");
+        Assertions.assertNonNull(economy, "Economy should not be null.");
+        Assertions.assertNonNull(from, "Holder should not be null.");
+        Assertions.assertNonNull(to, "Holder should not be null.");
+
+        return transfer(amount, economy.id(), from, to);
     }
 
     @Override
     public boolean transfer(Double amount, UUID economy, FrameworkPlayer from, FrameworkPlayer to) {
-        return false;
+        Assertions.assertNonNull(amount, "Value should not be null.");
+        Assertions.assertFalse(amount<=0, "Value not should be lower than 0.");
+        Assertions.assertNonNull(economy, "Economy should not be null.");
+        Assertions.assertNonNull(from, "Holder should not be null.");
+        Assertions.assertNonNull(to, "Holder should not be null.");
+
+        return transfer(amount, economy, from.getUuid(), to.getUuid());
     }
 
     @Override
     public boolean transfer(Double amount, UUID economy, UUID from, UUID to) {
-        return false;
+        Assertions.assertNonNull(amount, "Value should not be null.");
+        Assertions.assertFalse(amount<=0, "Value not should be lower than 0.");
+        Assertions.assertNonNull(economy, "Economy should not be null.");
+        Assertions.assertNonNull(from, "Holder should not be null.");
+        Assertions.assertNonNull(to, "Holder should not be null.");
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("holder", from);
+        body.put("to", to);
+        body.put("economy", economy);
+        body.put("action", "TRANSFER");
+        body.put("value", amount);
+
+        try {
+            return requestService.post("/economy/wallet/transaction")
+                    .body(body, RequestBodyType.APPLICATION_JSON)
+                    .execute(boolean.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
