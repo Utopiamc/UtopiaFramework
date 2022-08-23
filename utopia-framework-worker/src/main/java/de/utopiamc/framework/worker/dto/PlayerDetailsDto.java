@@ -7,5 +7,5 @@ public class PlayerDetailsDto {
 
     private final PlayerDto player;
 
-    private final BanDto banDto;
+    private final BanDto ban;
 }

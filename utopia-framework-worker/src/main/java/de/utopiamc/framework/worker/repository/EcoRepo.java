@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface EconomyRepository extends Neo4jRepository<Currency, UUID> {
+public interface EcoRepo extends Neo4jRepository<Currency, UUID> {
 
 
 

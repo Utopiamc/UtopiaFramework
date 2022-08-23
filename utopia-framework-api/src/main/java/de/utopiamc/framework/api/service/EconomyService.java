@@ -37,12 +37,6 @@ public interface EconomyService {
     Optional<PlayerEconomy> getEconomy(@NotNull UUID economy, @NotNull UUID holder);
 
     @NotNull
-    Set<PlayerEconomy> getEconomy(@NotNull String economy, @NotNull FrameworkPlayer holder);
-
-    @NotNull
-    Set<PlayerEconomy> getEconomy(@NotNull String economy, @NotNull UUID holder);
-
-    @NotNull
     Optional<PlayerEconomy> getEconomy(@NotNull Economy economy, @NotNull FrameworkPlayer holder);
 
     @NotNull

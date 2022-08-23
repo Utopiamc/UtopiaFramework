@@ -12,14 +12,14 @@ import java.util.UUID;
 
 @Data
 @RestController
-@RequestMapping("/economy")
-public class EconomyController {
+@RequestMapping("/eonomy")
+public class EcoController {
 
     private final EconomyService economyService;
 
     @GetMapping
     public ResponseEntity<CurrencyDto[]> getAll() {
-        return economyService.getAll();
+        return null;
     }
 
     @PostMapping("/transaction")
@@ -27,9 +27,5 @@ public class EconomyController {
 
     }
 
-    @GetMapping("/wallets")
-    public ResponseEntity<WalletDto[]> getWallets(@RequestParam UUID player) {
-        return economyService.getWallets(player);
-    }
 
 }
