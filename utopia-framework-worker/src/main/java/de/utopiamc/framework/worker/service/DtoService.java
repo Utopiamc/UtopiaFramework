@@ -1,16 +1,19 @@
 package de.utopiamc.framework.worker.service;
 
-import de.utopiamc.framework.worker.dto.CurrencyDto;
-import de.utopiamc.framework.worker.dto.PlayerDto;
-import de.utopiamc.framework.worker.dto.StatsDto;
+import de.utopiamc.framework.worker.dto.*;
+import de.utopiamc.framework.worker.economy.dto.EconomyDto;
+import de.utopiamc.framework.worker.economy.dto.EconomyHoldingDto;
+import de.utopiamc.framework.worker.economy.dto.WalletHoldingsDto;
+import de.utopiamc.framework.worker.economy.database.EconomyEntity;
+import de.utopiamc.framework.worker.economy.database.WalletHoldingRelationShip;
 import de.utopiamc.framework.worker.entity.Currency;
 import de.utopiamc.framework.worker.entity.Player;
 import de.utopiamc.framework.worker.entity.Stats;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class DtoService {
@@ -25,6 +28,10 @@ public class DtoService {
         return new PlayerDto(player.getUuid(), player.getName(), player.getFirstJoined());
     }
 
+    public PlayerDetailsDto toDto(Player player, BanDto banDto) {
+        return new PlayerDetailsDto(toDto(player), banDto);
+    }
+
     public CurrencyDto toDto(Currency currency) {
         return new CurrencyDto(currency.getUuid(),
                 currency.getDisplay(),
@@ -32,16 +39,15 @@ public class DtoService {
                 currency.getValue());
     }
 
-    public WalletDto toDto(Wallet wallet) {
-        Map<CurrencyDto, Long> currencies = new HashMap<>();
-        for (WalletCurrencyRelation currency : wallet.getCurrencies()) {
-            currencies.put(toDto(currency.getCurrency()), currency.getAmount());
-        }
+    public EconomyDto toDto(EconomyEntity economyEntity) {
+        return EconomyDto.of(economyEntity.getId(), economyEntity.getName(), economyEntity.getSymbol(), economyEntity.getValue());
+    }
 
-        return new WalletDto(
-                wallet.getId(),
-                currencies,
-                wallet.getContributors().stream().map((c) -> toDto(c.getPlayer())).collect(Collectors.toList())
-        );
+    public WalletHoldingsDto toDto(UUID wallet, UUID holder, Map<UUID, EconomyDto> economies, Set<EconomyHoldingDto> holdings) {
+        return new WalletHoldingsDto(wallet, holder, economies, holdings);
+    }
+
+    public EconomyHoldingDto toDto(WalletHoldingRelationShip rel) {
+        return EconomyHoldingDto.of(rel.getEconomy().getId(), rel.getValue());
     }
 }
