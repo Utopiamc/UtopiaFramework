@@ -96,9 +96,12 @@ public class CommonEconomyService implements EconomyService {
 
         asyncService.doAsync(() -> {
             try {
-                WalletHoldingsResponseDto response = requestService.get("/economy/wallet")
+                RequestResponse holder1 = requestService.get("/economy/wallet")
                         .queryParam("holder", holder.toString())
-                        .execute(WalletHoldingsResponseDto.class);
+                        .response();
+                System.out.println(holder1.statusCode());
+                WalletHoldingsResponseDto response = holder1
+                        .body(WalletHoldingsResponseDto.class);
 
                 return response.getHoldings().stream()
                         .map(holding -> new CommonPlayerEconomy(response.getEconomies().get(holding.getEconomy()),

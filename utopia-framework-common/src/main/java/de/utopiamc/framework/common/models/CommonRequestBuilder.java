@@ -38,7 +38,7 @@ public class CommonRequestBuilder implements RequestBuilder {
 
     @Override
     public RequestBuilder body(Object obj, RequestBodyType type) {
-        body = RequestBody.create(String.valueOf(obj), MediaType.get(type.toString() + "; charset=utf-8"));
+        body = RequestBody.create(new Gson().toJson(obj), MediaType.get(type.toString() + "; charset=utf-8"));
         return this;
     }
 
