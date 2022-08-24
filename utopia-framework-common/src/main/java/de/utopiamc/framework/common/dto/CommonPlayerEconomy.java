@@ -4,9 +4,11 @@ import de.utopiamc.framework.api.model.Economy;
 import de.utopiamc.framework.api.model.PlayerEconomy;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.util.UUID;
 
+@ToString
 @EqualsAndHashCode
 @RequiredArgsConstructor
 public class CommonPlayerEconomy implements PlayerEconomy {

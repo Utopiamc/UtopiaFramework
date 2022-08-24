@@ -1,9 +1,11 @@
 package de.utopiamc.framework.common.dto;
 
 import de.utopiamc.framework.api.model.Economy;
+import lombok.ToString;
 
 import java.util.UUID;
 
+@ToString
 public class CommonEconomy implements Economy {
 
     private UUID id;
