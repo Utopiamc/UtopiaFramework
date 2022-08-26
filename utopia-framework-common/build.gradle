@@ -5,6 +5,14 @@ dependencies {
 
     implementation 'org.jdom:jdom2:2.0.6.1'
     implementation 'io.github.classgraph:classgraph:4.8.149'
+
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+
+    implementation 'de.dytanic.cloudnet:cloudnet-wrapper-jvm:3.4.0-RELEASE'
+}
+
+repositories {
+    maven { url 'https://repo.cloudnetservice.eu/repository/releases/' }
 }
 
 tasks.register('uberJar', Jar) {
