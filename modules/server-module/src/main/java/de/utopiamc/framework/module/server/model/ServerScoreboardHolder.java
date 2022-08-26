@@ -64,6 +64,7 @@ public class ServerScoreboardHolder implements ScoreboardHolder {
             }
         }
 
-        player.getPlayer().setScoreboard(scoreboard);
+        if (player.getPlayer().isOnline())
+            ((Player) player.getPlayer()).setScoreboard(scoreboard);
     }
 }
