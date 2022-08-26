@@ -1,5 +1,5 @@
 group 'de.utopiamc'
-version '1.0-SNAPSHOT'
+version '1.0-BETA'
 
 allprojects {
     apply plugin: 'java'
@@ -13,9 +13,8 @@ allprojects {
 
     repositories {
         mavenCentral()
-        maven {
-            url = "https://repo.papermc.io/repository/maven-public/"
-        }
+        maven { url = "https://repo.papermc.io/repository/maven-public/" }
+        maven { url 'https://repo.cloudnetservice.eu/repository/releases/' }
     }
 
     dependencies {
@@ -37,5 +36,35 @@ allprojects {
 
     test {
         useJUnitPlatform()
+    }
+}
+
+subprojects {
+    apply plugin: 'maven-publish'
+
+    publishing {
+        repositories {
+            maven {
+                url = "https://repo.papermc.io/repository/maven-public/"
+            }
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/Utopiamc/UtopiaFramework".toLowerCase())
+                credentials {
+                    username = secrets.githubUsername ?: System.getenv("USERNAME")
+                    password = secrets.githubToken ?: System.getenv("TOKEN")
+                }
+            }
+        }
+        publications {
+            gpr(MavenPublication) {
+                from(components.java)
+
+                pom {
+
+                }
+                repositories.addAll(repositories)
+            }
+        }
     }
 }

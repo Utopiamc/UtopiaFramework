@@ -9,7 +9,7 @@ import de.utopiamc.framework.common.context.ApplicationContext;
 import de.utopiamc.framework.common.dropin.DropIn;
 import de.utopiamc.framework.common.service.DropInFileService;
 import de.utopiamc.framework.common.service.IndexService;
-import de.utopiamc.framework.common.service.impl.DropInBootstrapService;
+import de.utopiamc.framework.common.service.DropInBootstrapService;
 
 import java.util.HashSet;
 import java.util.LinkedList;
