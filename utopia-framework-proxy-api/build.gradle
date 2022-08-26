@@ -1,7 +1,6 @@
 dependencies {
     compileOnly 'net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT'
-    implementation project(':utopia-framework-proxy-api')
-    implementation project(':utopia-framework-common')
+    api project(":utopia-framework-api")
 }
 
 repositories {

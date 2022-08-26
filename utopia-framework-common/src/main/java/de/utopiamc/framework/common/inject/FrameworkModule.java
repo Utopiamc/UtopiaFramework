@@ -19,6 +19,7 @@ public class FrameworkModule extends AbstractModule {
         bind(ApplicationContext.class).toInstance(context);
 
         install(new CommonApisModule());
+        install(new ConstantsModule());
 
         requestStaticInjection(CandidateQueueUtil.class);
     }

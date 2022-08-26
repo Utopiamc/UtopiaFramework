@@ -1,9 +1,13 @@
 package de.utopiamc.framework.server.listener;
 
+import de.utopiamc.framework.api.service.PlayerHandler;
 import de.utopiamc.framework.common.context.ApplicationContext;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.reflections.Reflections;
@@ -14,6 +18,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ServerListener implements Listener {
+
+    @Inject
+    private PlayerHandler playerHandler;
 
     @Inject
     private ApplicationContext applicationContext;
@@ -34,6 +41,16 @@ public class ServerListener implements Listener {
 
     private void eventHandler(Event event) {
         applicationContext.dispatchEvent(event);
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        playerHandler.join(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        playerHandler.quit(event.getPlayer().getUniqueId());
     }
 
 }
