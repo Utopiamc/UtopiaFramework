@@ -8,4 +8,6 @@ public interface ScoreboardHolder {
     void bind(Player player);
     void bind(FrameworkPlayer player);
 
+    void autoBind();
+
 }

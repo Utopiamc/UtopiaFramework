@@ -2,10 +2,12 @@ package de.utopiamc.framework.module.server.model;
 
 import de.utopiamc.framework.api.entity.FrameworkPlayer;
 import de.utopiamc.framework.api.entity.ServerFrameworkPlayer;
+import de.utopiamc.framework.api.model.TempEventSubscription;
 import de.utopiamc.framework.api.ui.scoreboard.ScoreboardHolder;
 import de.utopiamc.framework.module.server.IntegerFunction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -15,6 +17,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ServerScoreboardHolder implements ScoreboardHolder {
 
     private final ServerScoreboardBuilder builder;
+
+    private boolean autoBind = false;
+
+    private TempEventSubscription autoBindTask;
 
     public ServerScoreboardHolder(ServerScoreboardBuilder builder) {
         this.builder = builder;
@@ -29,6 +35,10 @@ public class ServerScoreboardHolder implements ScoreboardHolder {
     public void bind(FrameworkPlayer p) {
         ServerFrameworkPlayer player = (ServerFrameworkPlayer) p;
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+
+        if (!player.getPlayer().isOnline()) {
+            return;
+        }
 
         Objective objective;
         if ((objective = scoreboard.getObjective("sidebar")) == null)
@@ -64,6 +74,32 @@ public class ServerScoreboardHolder implements ScoreboardHolder {
             }
         }
 
-        player.getPlayer().setScoreboard(scoreboard);
+        ((Player) player.getPlayer()).setScoreboard(scoreboard);
     }
+
+    @Override
+    public void autoBind() {
+        autoBind = !autoBind;
+
+        if (autoBind)
+            enableAutoBind();
+        else
+            disableAutoBind();
+    }
+
+    private void enableAutoBind() {
+        Bukkit.getOnlinePlayers().forEach(this::bindPlayer);
+
+        autoBindTask = builder.eventService.subscribe(PlayerJoinEvent.class, event -> bindPlayer(event.getPlayer()));
+    }
+
+    private void bindPlayer(Player player) {
+        FrameworkPlayer frameworkPlayer = builder.playerService.get(player.getUniqueId());
+        bind(frameworkPlayer);
+    }
+
+    private void disableAutoBind() {
+        autoBindTask.unsubscribe();
+    }
+
 }
