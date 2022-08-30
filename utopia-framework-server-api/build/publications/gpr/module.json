@@ -43,11 +43,11 @@
         {
           "name": "utopia-framework-server-api-1.0-SNAPSHOT.jar",
           "url": "utopia-framework-server-api-1.0-SNAPSHOT.jar",
-          "size": 8054,
-          "sha512": "22a8ae7079e8461dc2e1a697cbf9b237138462f6af4acd2167f8d410652269e1c7e68cb6d0e54c726057e56641bca4a3804d6647d269e8e1423a0c8418a91139",
-          "sha256": "75f39ff358b1d44f934bc941c5327b81f3d94ddaaee141e792661dda008e4af0",
-          "sha1": "3a6bb3785621db089b87af10e151b088136a596a",
-          "md5": "1a230db3d6f7689bef3bbb9e4a4cbce0"
+          "size": 9194,
+          "sha512": "069d147247099d332e06926fd275d6e4d6d9ebbe88f61e4cf4d6401bc84c4825fd6470a12d4250cdf4c772a1ddbaa8e7cbb75aab8f897888d5be1fd052bd6402",
+          "sha256": "8a6fce8728d7dade49b35a6fd7fce76f9c29f3c49da040dace92edb991f1f5c4",
+          "sha1": "361398be46c73a1511c7fdfcd724f925e04757e6",
+          "md5": "9459cd89f7a9715db6f599abb0b34525"
         }
       ]
     },
@@ -80,11 +80,11 @@
         {
           "name": "utopia-framework-server-api-1.0-SNAPSHOT.jar",
           "url": "utopia-framework-server-api-1.0-SNAPSHOT.jar",
-          "size": 8054,
-          "sha512": "22a8ae7079e8461dc2e1a697cbf9b237138462f6af4acd2167f8d410652269e1c7e68cb6d0e54c726057e56641bca4a3804d6647d269e8e1423a0c8418a91139",
-          "sha256": "75f39ff358b1d44f934bc941c5327b81f3d94ddaaee141e792661dda008e4af0",
-          "sha1": "3a6bb3785621db089b87af10e151b088136a596a",
-          "md5": "1a230db3d6f7689bef3bbb9e4a4cbce0"
+          "size": 9194,
+          "sha512": "069d147247099d332e06926fd275d6e4d6d9ebbe88f61e4cf4d6401bc84c4825fd6470a12d4250cdf4c772a1ddbaa8e7cbb75aab8f897888d5be1fd052bd6402",
+          "sha256": "8a6fce8728d7dade49b35a6fd7fce76f9c29f3c49da040dace92edb991f1f5c4",
+          "sha1": "361398be46c73a1511c7fdfcd724f925e04757e6",
+          "md5": "9459cd89f7a9715db6f599abb0b34525"
         }
       ]
     }
