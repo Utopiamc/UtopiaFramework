@@ -5,11 +5,11 @@ import de.utopiamc.framework.api.inject.CandidateQueue;
 import de.utopiamc.framework.api.inject.OneToOneInjectableCandidate;
 import org.bukkit.entity.Entity;
 
-public class EntityEvent extends BukkitEvent {
+public class FrameworkEntityEvent extends BukkitEvent {
 
     protected final Entity entity;
 
-    public EntityEvent(org.bukkit.event.entity.EntityEvent event) {
+    public FrameworkEntityEvent(org.bukkit.event.entity.EntityEvent event) {
         super(event);
 
         this.entity = event.getEntity();

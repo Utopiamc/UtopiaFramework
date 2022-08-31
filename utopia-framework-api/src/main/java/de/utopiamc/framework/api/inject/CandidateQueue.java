@@ -1,22 +1,18 @@
 package de.utopiamc.framework.api.inject;
 
-import de.utopiamc.framework.api.context.Context;
 import de.utopiamc.framework.api.exceptions.CandidateNotFoundException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 
-public class CandidateQueue {
+public final class CandidateQueue {
 
     public static final String NO_CANDIDATE_WITH__QUALIFIERS_MSG = "There is no candidate for '%s', with '%s' qualifier!";
-    private final LinkedList<InjectableCandidate> injectableCandidates;
+    final LinkedList<InjectableCandidate> injectableCandidates;
 
-    public CandidateQueue(Context context) {
+    public CandidateQueue() {
         injectableCandidates = new LinkedList<>();
-
-        injectableCandidates.addLast(new InjectableGuiceCandidate(context.getGuiceInjector()));
     }
 
     private CandidateQueue(LinkedList<InjectableCandidate> injectableCandidates) {

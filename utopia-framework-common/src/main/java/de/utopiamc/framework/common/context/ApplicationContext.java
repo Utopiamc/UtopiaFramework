@@ -15,6 +15,7 @@ import de.utopiamc.framework.common.old.dropin.DisableDropInReason;
 import de.utopiamc.framework.common.old.dropin.DropInSource;
 import de.utopiamc.framework.common.service.EventConverterService;
 
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -96,6 +97,8 @@ public class ApplicationContext implements Context, DropInHoldable, EventDispatc
     @Override
     public void dispatchEvent(FrameworkEvent event) {
         dropIns.forEach(d -> d.dispatchEvent(event, this));
+
+        handleTempEvents(event);
     }
     //endregion
 
@@ -109,6 +112,23 @@ public class ApplicationContext implements Context, DropInHoldable, EventDispatc
 
     public void removeTempEventSubscription(TempEventSubscription<?> eventSubscription) {
         tempEventSubscriptions.remove(eventSubscription);
+    }
+
+    private void handleTempEvents(FrameworkEvent event) {
+        for (TempEventSubscription<?> tempEventSubscription : tempEventSubscriptions) {
+            if (event.isComparable(tempEventSubscription.getEventClass())) {
+                try {
+                    for (Method declaredMethod : tempEventSubscription.getClass().getDeclaredMethods()) {
+                        if (declaredMethod.getName().equalsIgnoreCase("handle")) {
+                            event.callMethod(declaredMethod, tempEventSubscription);
+                        }
+                    }
+                } catch (Throwable t) {
+                    logger.severe(String.format("Failed to dispatch event. %s", t.getMessage()));
+                    t.printStackTrace();
+                }
+            }
+        }
     }
 
 }

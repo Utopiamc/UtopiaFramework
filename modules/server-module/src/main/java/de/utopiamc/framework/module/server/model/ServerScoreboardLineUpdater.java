@@ -24,6 +24,10 @@ public class ServerScoreboardLineUpdater implements ScoreboardLineUpdater {
         player.put(uuid, team);
     }
 
+    public void remove(UUID uuid) {
+        player.remove(uuid);
+    }
+
     @Override
     public void update(String value) {
         if (value == null)

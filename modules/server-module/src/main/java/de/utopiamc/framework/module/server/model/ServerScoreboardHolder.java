@@ -2,12 +2,13 @@ package de.utopiamc.framework.module.server.model;
 
 import de.utopiamc.framework.api.entity.FrameworkPlayer;
 import de.utopiamc.framework.api.entity.ServerFrameworkPlayer;
+import de.utopiamc.framework.api.events.player.FrameworkPlayerJoinEvent;
+import de.utopiamc.framework.api.events.player.FrameworkPlayerQuitEvent;
 import de.utopiamc.framework.api.model.TempEventSubscription;
 import de.utopiamc.framework.api.ui.scoreboard.ScoreboardHolder;
 import de.utopiamc.framework.module.server.IntegerFunction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -21,6 +22,7 @@ public class ServerScoreboardHolder implements ScoreboardHolder {
     private boolean autoBind = false;
 
     private TempEventSubscription autoBindTask;
+    private TempEventSubscription autoBindUnBindTask;
 
     public ServerScoreboardHolder(ServerScoreboardBuilder builder) {
         this.builder = builder;
@@ -90,7 +92,12 @@ public class ServerScoreboardHolder implements ScoreboardHolder {
     private void enableAutoBind() {
         Bukkit.getOnlinePlayers().forEach(this::bindPlayer);
 
-        autoBindTask = builder.eventService.subscribe(PlayerJoinEvent.class, event -> bindPlayer(event.getPlayer()));
+        autoBindTask = builder.eventService.subscribe(FrameworkPlayerJoinEvent.class, (event) -> {
+            bindPlayer((Player) event.getFrameworkPlayer().getPlayer());
+        });
+        autoBindUnBindTask = builder.eventService.subscribe(FrameworkPlayerQuitEvent.class, (event) -> {
+            builder.getLineBuilders().forEach(b -> b.unbind(event.getFrameworkPlayer().getUuid()));
+        });
     }
 
     private void bindPlayer(Player player) {

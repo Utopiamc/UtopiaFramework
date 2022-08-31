@@ -40,7 +40,13 @@ public abstract class FrameworkEvent {
 
         makeMethodAccessible(method);
 
-        List<Object> arguments = resolveParameters(method.getParameters(), tempQueue);
+        List<Object> arguments;
+
+        if (method.getParameters().length == 1 && !AnnotationUtil.isAnnotationPresent(method.getParameters()[0], Qualifier.class)) {
+            arguments = List.of(this);
+        }else {
+            arguments = resolveParameters(method.getParameters(), tempQueue);
+        }
 
         method.invoke(instance, arguments.toArray());
     }

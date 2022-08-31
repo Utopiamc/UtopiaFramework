@@ -8,6 +8,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.UUID;
+
 public class ServerDynamicScoreboardLineBuilder extends ServerScoreboardLineBuilder implements DynamicScoreboardLineBuilder {
 
 
@@ -47,7 +49,7 @@ public class ServerDynamicScoreboardLineBuilder extends ServerScoreboardLineBuil
     @Override
     public Integer requiredLines() {
         int i = 0;
-        if (title!=null || contentUpdater != null)
+        if (title!=null || titleUpdater != null)
             i++;
         if (content!=null || contentUpdater != null)
             i++;
@@ -63,12 +65,12 @@ public class ServerDynamicScoreboardLineBuilder extends ServerScoreboardLineBuil
     private void registerLine(IntegerFunction integerFunction, Objective objective, ServerFrameworkPlayer player, String value, ServerScoreboardLineUpdater scoreboardLineUpdater) {
         if (value != null) {
             Integer integer = integerFunction.get();
-            objective.getScore(value).setScore(integer);
+            objective.getScore(builder.colorService.translateColors(value)).setScore(integer);
         } else if (scoreboardLineUpdater != null) {
             Integer integer = integerFunction.get();
 
             Scoreboard scoreboard = objective.getScoreboard();
-            String key = "";
+            String key = ServerScoreboardBuilder.VAR_KEYS[integer];
 
             Team team = scoreboard.getTeam(key);
             if (team == null) {
@@ -96,5 +98,16 @@ public class ServerDynamicScoreboardLineBuilder extends ServerScoreboardLineBuil
         }else {
             team.setPrefix(value);
         }
+    }
+
+    @Override
+    public void unbind(UUID uuid) {
+        super.unbind(uuid);
+
+        if (titleUpdater != null)
+            titleUpdater.remove(uuid);
+
+        if (contentUpdater != null)
+            contentUpdater.remove(uuid);
     }
 }

@@ -1,6 +1,7 @@
 package de.utopiamc.framework.common.service.impl;
 
 import com.google.inject.Inject;
+import de.utopiamc.framework.api.event.FrameworkEvent;
 import de.utopiamc.framework.api.model.EventHandler;
 import de.utopiamc.framework.api.service.TempEventService;
 import de.utopiamc.framework.common.context.ApplicationContext;
@@ -16,7 +17,7 @@ public class CommonTempEventService implements TempEventService {
     }
 
     @Override
-    public <T> de.utopiamc.framework.api.model.TempEventSubscription subscribe(Class<T> event, EventHandler<T> handler) {
+    public <T extends FrameworkEvent> de.utopiamc.framework.api.model.TempEventSubscription subscribe(Class<T> event, EventHandler<T> handler) {
         TempEventSubscription<T> eventSubscription = new TempEventSubscription<T>() {
             @Override
             public Class<T> getEventClass() {

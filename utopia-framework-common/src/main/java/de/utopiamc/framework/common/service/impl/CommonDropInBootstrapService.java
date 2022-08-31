@@ -11,7 +11,6 @@ import de.utopiamc.framework.common.dropin.CommonDropInModule;
 import de.utopiamc.framework.common.dropin.DropIn;
 import de.utopiamc.framework.common.exceptions.InvalidDropInModuleClassException;
 import de.utopiamc.framework.common.models.JarFileIndex;
-import de.utopiamc.framework.common.service.DropInBootstrapService;
 
 import java.util.*;
 import java.util.logging.Logger;

@@ -16,6 +16,9 @@ allprojects {
         maven {
             url = "https://repo.papermc.io/repository/maven-public/"
         }
+        maven {
+            url = "https://repo.cloudnetservice.eu/repository/releases/"
+        }
     }
 
     dependencies {
