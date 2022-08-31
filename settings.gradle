@@ -13,4 +13,5 @@ include 'modules:server-module'
 findProject(':modules:server-module')?.name = 'server-module'
 include 'tests'
 include 'utopia-framework-backend-worker'
+include 'utopia-framework-proxy-api'
 

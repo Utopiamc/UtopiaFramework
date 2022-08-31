@@ -1,11 +1,11 @@
 package de.utopiamc.framework.common.dto;
 
-import lombok.ToString;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.UUID;
 
-@ToString
+@Data
 public class PlayerDto {
 
     private String name;
