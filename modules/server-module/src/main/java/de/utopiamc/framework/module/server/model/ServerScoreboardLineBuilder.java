@@ -7,6 +7,8 @@ import de.utopiamc.framework.api.ui.scoreboard.ScoreboardLineBuilder;
 import de.utopiamc.framework.module.server.IntegerFunction;
 import org.bukkit.scoreboard.Objective;
 
+import java.util.UUID;
+
 public abstract class ServerScoreboardLineBuilder implements ScoreboardLineBuilder {
 
     protected final ServerScoreboardBuilder builder;
@@ -28,6 +30,8 @@ public abstract class ServerScoreboardLineBuilder implements ScoreboardLineBuild
     public void registerLine(IntegerFunction integerFunction, Objective objective, ServerFrameworkPlayer player) {
 
     }
+
+    public void unbind(UUID uuid) {}
 
     public Integer requiredLines() {
         return 0;

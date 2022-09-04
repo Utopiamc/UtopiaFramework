@@ -1,8 +1,11 @@
 package de.utopiamc.framework.api.entity;
 
+import lombok.ToString;
+
 import java.util.Date;
 import java.util.UUID;
 
+@ToString
 public abstract class FrameworkPlayer {
 
     private final UUID uuid;

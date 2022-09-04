@@ -1,9 +1,13 @@
 package de.utopiamc.framework.common.models;
 
-public interface TempEventSubscription<T> {
+import de.utopiamc.framework.api.event.FrameworkEvent;
+import de.utopiamc.framework.api.event.qualifier.Event;
+
+public interface TempEventSubscription<T extends FrameworkEvent> {
 
     Class<T> getEventClass();
 
-    void handle(T t);
+    void handle(@Event T t);
+
 
 }

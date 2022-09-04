@@ -9,6 +9,10 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
 
     implementation 'de.dytanic.cloudnet:cloudnet-wrapper-jvm:3.4.0-RELEASE'
+
+    implementation 'javax.websocket:javax.websocket-api:1.1'
+    implementation 'org.glassfish.tyrus:tyrus-client:2.1.0'
+    implementation 'org.glassfish.tyrus:tyrus-container-grizzly-client:2.1.0'
 }
 
 tasks.register('uberJar', Jar) {

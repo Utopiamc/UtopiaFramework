@@ -17,7 +17,7 @@ public class ProxyPlayerHandler extends CommonPlayerHandler {
 
     @Inject
     public ProxyPlayerHandler(FrameworkPlayerService frameworkPlayerService, RequestService requestService) {
-        super(frameworkPlayerService);
+        super(frameworkPlayerService, stompHandler);
         this.requestService = requestService;
     }
 

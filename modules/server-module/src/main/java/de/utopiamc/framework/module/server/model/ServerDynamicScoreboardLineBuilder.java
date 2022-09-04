@@ -1,34 +1,25 @@
 package de.utopiamc.framework.module.server.model;
 
 import de.utopiamc.framework.api.entity.ServerFrameworkPlayer;
-import de.utopiamc.framework.api.model.TempEventSubscription;
-import de.utopiamc.framework.api.model.VariableEventHandler;
 import de.utopiamc.framework.api.ui.scoreboard.DynamicScoreboardLineBuilder;
+import de.utopiamc.framework.api.ui.scoreboard.ScoreboardLineUpdater;
 import de.utopiamc.framework.module.server.IntegerFunction;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.UUID;
 
 public class ServerDynamicScoreboardLineBuilder extends ServerScoreboardLineBuilder implements DynamicScoreboardLineBuilder {
 
 
     private String title;
+    private ServerScoreboardLineUpdater titleUpdater;
     private String content;
-
-    private final Map<String, ServerDynamicVariable> variables;
-    int varKeyCount;
+    private ServerScoreboardLineUpdater contentUpdater;
 
     public ServerDynamicScoreboardLineBuilder(ServerScoreboardBuilder builder) {
         super(builder);
-
-        this.variables = new HashMap<>();
-        this.varKeyCount = 0;
     }
 
     @Override
@@ -44,96 +35,79 @@ public class ServerDynamicScoreboardLineBuilder extends ServerScoreboardLineBuil
     }
 
     @Override
-    public <E> DynamicScoreboardLineBuilder addDynamicVariable(String name, String defaultValue, Class<E> event, VariableEventHandler<E> handler) {
-        return addDynamicVariable(name, () -> defaultValue, event, handler);
+    public ScoreboardLineUpdater setTitle() {
+        this.titleUpdater = new ServerScoreboardLineUpdater(this::setTeamValue);
+        return titleUpdater;
     }
 
     @Override
-    public <E> DynamicScoreboardLineBuilder addDynamicVariable(String name, Supplier<String> defaultValue, Class<E> event, VariableEventHandler<E> handler) {
-        variables.put(name, new ServerDynamicVariable(this, name, defaultValue, event, handler));
-        return this;
+    public ScoreboardLineUpdater setContent() {
+        this.contentUpdater = new ServerScoreboardLineUpdater(this::setTeamValue);
+        return contentUpdater;
     }
 
     @Override
     public Integer requiredLines() {
         int i = 0;
-        if (title!=null)
+        if (title!=null || titleUpdater != null)
             i++;
-        if (content!=null)
+        if (content!=null || contentUpdater != null)
             i++;
         return i;
     }
 
     @Override
     public void registerLine(IntegerFunction integerFunction, Objective objective, ServerFrameworkPlayer player) {
-        registerLine(integerFunction, objective, player, title);
-        registerLine(integerFunction, objective, player, content);
+        registerLine(integerFunction, objective, player, title, titleUpdater);
+        registerLine(integerFunction, objective, player, content, contentUpdater);
     }
 
-    private void registerLine(IntegerFunction integerFunction, Objective objective, ServerFrameworkPlayer player, String value) {
+    private void registerLine(IntegerFunction integerFunction, Objective objective, ServerFrameworkPlayer player, String value, ServerScoreboardLineUpdater scoreboardLineUpdater) {
         if (value != null) {
             Integer integer = integerFunction.get();
+            objective.getScore(builder.colorService.translateColors(value)).setScore(integer);
+        } else if (scoreboardLineUpdater != null) {
+            Integer integer = integerFunction.get();
 
-            Pattern pattern = Pattern.compile("%[a-zA-Z]+%");
+            Scoreboard scoreboard = objective.getScoreboard();
+            String key = ServerScoreboardBuilder.VAR_KEYS[integer];
 
-            Matcher matcher = pattern.matcher(value);
+            Team team = scoreboard.getTeam(key);
+            if (team == null) {
+                team = scoreboard.registerNewTeam(key);
+            }
+            team.addEntry(key);
 
-            String v2 = matcher.replaceAll((result) -> {
-                String string = result.group();
-                String name = string.substring(1, string.length()-1);
-                ServerDynamicVariable variable = variables.get(name);
+            String defaultValue = scoreboardLineUpdater.onBound(player);
+            if (defaultValue == null)
+                defaultValue = "EMPTY";
 
-                System.out.println(variable);
+            setTeamValue(defaultValue, team);
 
-                if (variable == null)
-                    return "";
+            objective.getScore(key).setScore(integer);
 
-                String key1 = variable.getKey();
-
-                System.out.println(key1.replace('§', '/'));
-
-                setupVariable(player, objective, variable);
-
-                return key1;
-            });
-
-            System.out.println(v2.replace('§', '/'));
-
-            String entry = builder.colorService.translateColors(v2);
-            System.out.println(entry.replace('§', '/'));
-
-            objective.getScore(entry).setScore(integer);
+            scoreboardLineUpdater.put(player.getUuid(), team);
         }
     }
 
-    private void setupVariable(ServerFrameworkPlayer player, Objective objective, ServerDynamicVariable<?> variable) {
-        Scoreboard scoreboard = objective.getScoreboard();
-        Team team = scoreboard.getTeam(variable.getTeamName());
-        if (team == null)
-            team = scoreboard.registerNewTeam(variable.getTeamName());
-
-        team.addEntry(variable.getKey());
-
-        setTeamValue(variable.getDefaultValue(), team);
-
-        System.out.println(team);
-        System.out.println(team.getEntries());
-        System.out.println(team.getPrefix());
-
-        final Team finalTeam = team;
-        TempEventSubscription subscribe = builder.eventService.subscribe(variable.getEvent(), (event) -> {
-            String handle = variable.getHandler().handle(player, event);
-            setTeamValue(handle, finalTeam);
-        });
-    }
-
-    private void setTeamValue(String v2, Team team) {
-        v2 = builder.colorService.translateColors(v2);
-        if (v2.length() > 64) {
-            team.setPrefix(v2.substring(0, 63));
-            team.setSuffix(v2.substring(64));
+    private void setTeamValue(String value, Team team) {
+        value = builder.colorService.translateColors(value);
+        if (value.length() > 64) {
+            team.setPrefix(value.substring(0, 63));
+            team.setSuffix(value.substring(64));
         }else {
-            team.setPrefix(v2);
+            team.setPrefix(value);
         }
+    }
+
+    @Override
+    public void unbind(UUID uuid) {
+        super.unbind(uuid);
+
+        if (titleUpdater != null)
+            titleUpdater.remove(uuid);
+
+        if (contentUpdater != null)
+            contentUpdater.remove(uuid);
     }
 }

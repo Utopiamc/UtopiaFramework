@@ -1,39 +1,50 @@
 package de.utopiamc.test;
 
 import com.google.inject.Inject;
-import de.utopiamc.framework.api.event.Subscribe;
-import de.utopiamc.framework.api.event.qualifier.Event;
+import de.utopiamc.framework.api.dropin.annotations.OnEnable;
 import de.utopiamc.framework.api.service.ScoreboardFactory;
 import de.utopiamc.framework.api.stereotype.Controller;
 import de.utopiamc.framework.api.stereotype.Plugin;
+import de.utopiamc.framework.api.ui.scoreboard.ScoreboardBuilder;
 import de.utopiamc.framework.api.ui.scoreboard.ScoreboardHolder;
+import de.utopiamc.framework.api.ui.scoreboard.ScoreboardLineUpdater;
 import org.bukkit.Bukkit;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 @Plugin
 @Cool
 @Controller
 public class Test {
 
+    private int i = 0;
+
     private final ScoreboardFactory scoreboardFactory;
+
+    private ScoreboardHolder holder;
 
     @Inject
     public Test(ScoreboardFactory scoreboardFactory) {
         this.scoreboardFactory = scoreboardFactory;
     }
 
-    @Subscribe(event = PlayerJoinEvent.class)
-    public void join(@Event PlayerJoinEvent playerEvent) {
-        ScoreboardHolder $pCool = scoreboardFactory.createScoreboard()
-                .addLine()
-                    .setTitle("$p§lTest")
-                    .setContent("§8§l» $sHi")
-                    .and()
-                .addDynamicLine()
-                .setContent("Ich bin %online%")
-                .addDynamicVariable("online", () -> String.valueOf(Bukkit.getOnlinePlayers().size()), PlayerJoinEvent.class, (player, event) -> String.valueOf(Bukkit.getOnlinePlayers().size()))
-                .build();
-        $pCool.bind(playerEvent.getPlayer());
+    @OnEnable
+    public void onEnable() {
+        ScoreboardBuilder scoreboardBuilder = scoreboardFactory.createScoreboard()
+                .shouldSpaceLines(1);
+
+        ScoreboardLineUpdater scoreboardLineUpdater = scoreboardBuilder.addDynamicLine().setTitle("$p&lTest")
+                .setContent();
+        scoreboardLineUpdater.onBound((player) -> String.valueOf(i));
+
+        holder = scoreboardBuilder.build();
+        holder.autoBind();
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(Bukkit.getPluginManager().getPlugin("UtopiaFramework-ServerImplementation"),
+                () -> {
+            i++;
+            scoreboardLineUpdater.update(String.valueOf(i));
+                },
+                0,
+                20);
     }
 
 }

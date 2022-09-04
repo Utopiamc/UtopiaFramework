@@ -1,6 +1,7 @@
 package de.utopiamc.framework.worker.service;
 
 import de.utopiamc.framework.worker.dto.PlayerDetailsDto;
+import de.utopiamc.framework.worker.dto.PlayerDto;
 import de.utopiamc.framework.worker.entity.Player;
 import de.utopiamc.framework.worker.exception.PlayerNotFoundException;
 import de.utopiamc.framework.worker.repository.PlayerRepository;
@@ -26,5 +27,9 @@ public class PlayerService {
         Player player = getPlayer(uuid);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(dtoService.toDto(player, null));
+    }
+
+    public ResponseEntity<PlayerDto> getWrappedPlayer(UUID player) {
+        return ResponseEntity.ok(dtoService.toDto(getPlayer(player)));
     }
 }

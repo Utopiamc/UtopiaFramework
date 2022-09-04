@@ -2,12 +2,16 @@ package de.utopiamc.framework.worker.economy;
 
 import de.utopiamc.framework.worker.economy.database.*;
 import de.utopiamc.framework.worker.economy.dto.*;
+import de.utopiamc.framework.worker.economy.packet.EconomyHoldingsUpdateCause;
+import de.utopiamc.framework.worker.economy.packet.EconomyHoldingsUpdatePacket;
+import de.utopiamc.framework.worker.event.EventPublishService;
 import de.utopiamc.framework.worker.service.DtoService;
 import lombok.RequiredArgsConstructor;
 import org.neo4j.cypherdsl.core.utils.Assertions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
@@ -19,6 +23,8 @@ public class EconomyServiceImpl implements EconomyService {
     private final EconomyRepository economyRepository;
     private final WalletRepository walletRepository;
     private final DtoService dtoService;
+
+    private final EventPublishService publishService;
     @Override
     public ResponseEntity<EconomyDto[]> getAll() {
 
@@ -95,15 +101,15 @@ public class EconomyServiceImpl implements EconomyService {
                     };
             }
             return ResponseEntity.notFound().build();
-        }catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     private WalletEntity ensureWalletExists(UUID holder, UUID economy) {
         Optional<WalletEntity> holdingByEconomy = walletRepository.getHoldingByEconomy(holder, economy);
         if (holdingByEconomy.isEmpty()) {
-            EconomyEntity economyEntity = economyRepository.findById(economy).orElseThrow(() -> new IllegalArgumentException("Economy not found."));
+            EconomyEntity economyEntity = economyRepository.findById(economy).orElseThrow(() -> new NotFoundException("Economy not found."));
             WalletEntity wallet = new WalletEntity();
             WalletHoldingRelationShip walletHoldingRelationShip = new WalletHoldingRelationShip();
             walletHoldingRelationShip.setEconomy(economyEntity);
@@ -145,8 +151,15 @@ public class EconomyServiceImpl implements EconomyService {
         Assertions.notNull(transaction.getValue(), "Amount should not be null.");
         Assertions.isTrue(!(transaction.getValue()<=0), "Amount should be positive.");
 
+        Double prev = holding.getValue();
         holding.setValue(transaction.getValue());
         walletRepository.save(wallet);
+
+        publishUpdate(transaction.getHolder(),
+                EconomyHoldingsUpdateCause.SET,
+                holding.getEconomy(),
+                prev,
+                holding.getValue());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(TransactionResponseDto.of(true, holding.getValue()));
     }
@@ -161,6 +174,12 @@ public class EconomyServiceImpl implements EconomyService {
         holding.setValue(holding.getValue() - transaction.getAmount());
         walletRepository.save(wallet);
 
+        publishUpdate(transaction.getHolder(),
+                EconomyHoldingsUpdateCause.DECREASE,
+                holding.getEconomy(),
+                holding.getValue() + transaction.getAmount(),
+                holding.getValue());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(TransactionResponseDto.of(true, holding.getValue()));
     }
 
@@ -171,7 +190,23 @@ public class EconomyServiceImpl implements EconomyService {
         holding.setValue(holding.getValue() + transaction.getAmount());
         walletRepository.save(wallet);
 
+        publishUpdate(transaction.getHolder(),
+                EconomyHoldingsUpdateCause.INCREASE,
+                holding.getEconomy(),
+                holding.getValue() - transaction.getAmount(),
+                holding.getValue());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(TransactionResponseDto.of(true, holding.getValue()));
+    }
+
+    private void publishUpdate(UUID holder, EconomyHoldingsUpdateCause cause, EconomyEntity economy, Double prevValue, Double newValue) {
+        publishService.publishPlayer(holder, EconomyHoldingsUpdatePacket.builder()
+                .holder(holder)
+                .cause(cause)
+                .economy(dtoService.toDto(economy))
+                .previousValue(prevValue)
+                .newValue(newValue)
+                .build());
     }
 
 }

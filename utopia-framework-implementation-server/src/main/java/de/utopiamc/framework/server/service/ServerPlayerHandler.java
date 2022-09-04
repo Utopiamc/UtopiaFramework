@@ -5,6 +5,7 @@ import de.utopiamc.framework.api.service.FrameworkPlayerService;
 import de.utopiamc.framework.api.service.RequestService;
 import de.utopiamc.framework.common.dto.PlayerDto;
 import de.utopiamc.framework.common.dto.PlayerInfoDto;
+import de.utopiamc.framework.common.messaging.StompHandler;
 import de.utopiamc.framework.common.service.impl.CommonPlayerHandler;
 
 import javax.inject.Inject;
@@ -16,8 +17,8 @@ public class ServerPlayerHandler extends CommonPlayerHandler {
     private final RequestService requestService;
 
     @Inject
-    public ServerPlayerHandler(FrameworkPlayerService playerService, RequestService requestService) {
-        super(playerService);
+    public ServerPlayerHandler(FrameworkPlayerService playerService, RequestService requestService, StompHandler stompHandler) {
+        super(playerService, stompHandler);
         this.requestService = requestService;
     }
 

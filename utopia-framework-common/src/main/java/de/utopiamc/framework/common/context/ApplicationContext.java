@@ -5,22 +5,28 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import de.utopiamc.framework.api.context.Context;
+import de.utopiamc.framework.api.entity.FrameworkPlayer;
 import de.utopiamc.framework.api.event.FrameworkEvent;
+import de.utopiamc.framework.api.packets.PacketTypeRegistry;
+import de.utopiamc.framework.api.service.FrameworkPlayerService;
 import de.utopiamc.framework.common.config.CommonConfigurationModule;
 import de.utopiamc.framework.common.dropin.DropIn;
-import de.utopiamc.framework.common.events.EventDispatchable;
 import de.utopiamc.framework.common.inject.FrameworkModule;
+import de.utopiamc.framework.common.messaging.StompHandler;
 import de.utopiamc.framework.common.models.TempEventSubscription;
 import de.utopiamc.framework.common.old.dropin.DisableDropInReason;
 import de.utopiamc.framework.common.old.dropin.DropInSource;
+import de.utopiamc.framework.common.packets.EconomyHoldingsUpdatePacket;
 import de.utopiamc.framework.common.service.EventConverterService;
 
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Logger;
 
-public class ApplicationContext implements Context, DropInHoldable, EventDispatchable {
+public class ApplicationContext implements Context, DropInHoldable {
 
     @Inject
     private static Logger logger;
@@ -45,9 +51,18 @@ public class ApplicationContext implements Context, DropInHoldable, EventDispatc
         guiceInjector = createInjector(modules);
 
         eventConverter = getEventConverter();
+
+        registerCommonPackets();
+    }
+
+    private void registerCommonPackets() {
+        PacketTypeRegistry instance = guiceInjector.getInstance(PacketTypeRegistry.class);
+
+        instance.registerPacketType("economy.holdings.update", EconomyHoldingsUpdatePacket.class);
     }
 
     public void disable() {
+        guiceInjector.getInstance(StompHandler.class).disconnect();
         dropIns.forEach(DropIn::disable);
     }
 
@@ -96,11 +111,18 @@ public class ApplicationContext implements Context, DropInHoldable, EventDispatc
     @Override
     public void dispatchEvent(FrameworkEvent event) {
         dropIns.forEach(d -> d.dispatchEvent(event, this));
+
+        handleTempEvents(event);
     }
     //endregion
 
     public Injector getGuiceInjector() {
         return guiceInjector;
+    }
+
+    @Override
+    public FrameworkPlayer getFrameworkPlayer(UUID player) {
+        return getGuiceInjector().getInstance(FrameworkPlayerService.class).get(player);
     }
 
     public void addTempEventSubscription(TempEventSubscription<?> eventSubscription) {
@@ -109,6 +131,23 @@ public class ApplicationContext implements Context, DropInHoldable, EventDispatc
 
     public void removeTempEventSubscription(TempEventSubscription<?> eventSubscription) {
         tempEventSubscriptions.remove(eventSubscription);
+    }
+
+    private void handleTempEvents(FrameworkEvent event) {
+        for (TempEventSubscription<?> tempEventSubscription : tempEventSubscriptions) {
+            if (event.isComparable(tempEventSubscription.getEventClass())) {
+                try {
+                    for (Method declaredMethod : tempEventSubscription.getClass().getDeclaredMethods()) {
+                        if (declaredMethod.getName().equalsIgnoreCase("handle")) {
+                            event.callMethod(declaredMethod, tempEventSubscription);
+                        }
+                    }
+                } catch (Throwable t) {
+                    logger.severe(String.format("Failed to dispatch event. %s", t.getMessage()));
+                    t.printStackTrace();
+                }
+            }
+        }
     }
 
 }
