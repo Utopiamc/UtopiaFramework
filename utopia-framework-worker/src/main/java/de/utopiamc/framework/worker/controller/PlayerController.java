@@ -5,10 +5,7 @@ import de.utopiamc.framework.worker.dto.PlayerDto;
 import de.utopiamc.framework.worker.service.PlayerService;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -27,6 +24,11 @@ public class PlayerController {
     @PostMapping("/quit")
     public ResponseEntity<PlayerDto> quit(@RequestParam UUID player) {
         return null;
+    }
+
+    @GetMapping
+    public ResponseEntity<PlayerDto> get(@RequestParam UUID uuid) {
+        return playerService.getWrappedPlayer(uuid);
     }
 
 }

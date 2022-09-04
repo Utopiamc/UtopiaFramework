@@ -3,13 +3,11 @@ package de.utopiamc.framework.server.inject;
 import com.google.inject.AbstractModule;
 import de.utopiamc.framework.api.service.AsyncService;
 import de.utopiamc.framework.api.service.FrameworkPlayerService;
+import de.utopiamc.framework.api.service.PlayerHandler;
 import de.utopiamc.framework.api.tasks.TaskService;
 import de.utopiamc.framework.common.service.EventConverterService;
 import de.utopiamc.framework.server.plugin.UtopiaFrameworkPlugin;
-import de.utopiamc.framework.server.service.ServerAsyncService;
-import de.utopiamc.framework.server.service.ServerEventConverterService;
-import de.utopiamc.framework.server.service.ServerFrameworkPlayerService;
-import de.utopiamc.framework.server.service.ServerTaskService;
+import de.utopiamc.framework.server.service.*;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,5 +22,6 @@ public class ServerModule extends AbstractModule {
         bind(FrameworkPlayerService.class).to(ServerFrameworkPlayerService.class);
         bind(AsyncService.class).to(ServerAsyncService.class);
         bind(TaskService.class).to(ServerTaskService.class);
+        bind(PlayerHandler.class).to(ServerPlayerHandler.class);
     }
 }

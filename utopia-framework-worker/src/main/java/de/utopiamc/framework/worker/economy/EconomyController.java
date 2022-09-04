@@ -5,14 +5,18 @@ import de.utopiamc.framework.worker.economy.dto.EconomyTransactionDto;
 import de.utopiamc.framework.worker.economy.dto.TransactionResponseDto;
 import de.utopiamc.framework.worker.economy.dto.WalletHoldingsDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
+@ControllerAdvice
 @RequestMapping("/economy")
 public class EconomyController {
 
@@ -50,10 +54,16 @@ public class EconomyController {
     }
 
     @PostMapping("/wallet/transaction")
-    public ResponseEntity<TransactionResponseDto> createTransaction(@Valid @RequestBody EconomyTransactionDto transaction) {
+    public ResponseEntity<TransactionResponseDto> createTransaction(@RequestBody EconomyTransactionDto transaction) {
         return economyService.createTransaction(transaction);
     }
 
     //endregion
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handle(HttpMessageNotReadableException e) {
+        log.warn("Returning HTTP 400 Bad Request", e);
+    }
 
 }

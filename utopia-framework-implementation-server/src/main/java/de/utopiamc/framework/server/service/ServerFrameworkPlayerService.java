@@ -8,16 +8,58 @@ import org.bukkit.Bukkit;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ServerFrameworkPlayerService implements FrameworkPlayerService {
 
     private final RequestService requestService;
 
-    private record ServerPlayerCache(UUID uuid, String name, Date firstJoined) {}
+    private static final class ServerPlayerCache {
+        private UUID uuid;
+        private String name;
+        private Date firstJoined;
+
+        private ServerPlayerCache(UUID uuid, String name, Date firstJoined) {
+            this.uuid = uuid;
+            this.name = name;
+            this.firstJoined = firstJoined;
+        }
+
+        public UUID uuid() {
+            return uuid;
+        }
+
+        public String name() {
+            return name;
+        }
+
+        public Date firstJoined() {
+            return firstJoined;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (ServerPlayerCache) obj;
+            return Objects.equals(this.uuid, that.uuid) &&
+                    Objects.equals(this.name, that.name) &&
+                    Objects.equals(this.firstJoined, that.firstJoined);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(uuid, name, firstJoined);
+        }
+
+        @Override
+        public String toString() {
+            return "ServerPlayerCache[" +
+                    "uuid=" + uuid + ", " +
+                    "name=" + name + ", " +
+                    "firstJoined=" + firstJoined + ']';
+        }
+    }
 
     private final Map<UUID, ServerPlayerCache> uuidCache;
     private final Map<String, ServerPlayerCache> nameCache;
@@ -40,6 +82,7 @@ public class ServerFrameworkPlayerService implements FrameworkPlayerService {
 
     @Override
     public FrameworkPlayer get(UUID uuid) {
+        System.out.println(uuidCache);
         loadCacheIfNotPresent(uuid);
 
         ServerPlayerCache cache = uuidCache.get(uuid);
@@ -62,6 +105,7 @@ public class ServerFrameworkPlayerService implements FrameworkPlayerService {
             ServerPlayerCache newCache = requestService.get("/player")
                     .queryParam("uuid", uuid.toString())
                     .execute(ServerPlayerCache.class);
+            System.out.println(newCache);
             uuidCache.put(uuid, newCache);
             nameCache.put(newCache.name, newCache);
         } catch (IOException e) {
