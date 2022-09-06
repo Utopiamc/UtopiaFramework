@@ -25,4 +25,8 @@ public abstract class CommonPlayerHandler implements PlayerHandler {
         stompHandler.subscribe(uuid);
     }
 
+    @Override
+    public void quit(UUID uuid) {
+        stompHandler.unsubscribe(uuid);
+    }
 }
