@@ -7,7 +7,6 @@ import de.utopiamc.framework.common.messaging.socket.StompWebSocket;
 import de.utopiamc.framework.common.messaging.trafic.FrameType;
 import de.utopiamc.framework.common.messaging.trafic.MessageListener;
 import de.utopiamc.framework.common.messaging.trafic.StompFrame;
-import de.utopiamc.framework.common.messaging.trafic.SubscriptionRouter;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,7 +31,7 @@ public class StompClient {
     private final StompListener listener;
     private final StompSocket socket;
 
-    private final SubscriptionRouter router = new SubscriptionRouter();
+    private final SubscriptionRouter router = new SubscriptionRouter(this);
 
     private boolean isConnected;
 
@@ -47,7 +46,7 @@ public class StompClient {
         StompFrame frame = new StompFrame(FrameType.SEND, channel)
                 .withHeader("Content-Type", "application/json")
                 .withBody(message);
-        sendConnectFrame();
+        sendStompFrame(frame);
     }
 
     public void subscribe(String channel, MessageListener listener) {
@@ -123,7 +122,7 @@ public class StompClient {
         fire(l -> l.connectionSuccess(this));
     }
 
-    private void sendStompFrame(StompFrame frame) {
+    void sendStompFrame(StompFrame frame) {
         socket.sendFrame(frame);
     }
 
@@ -151,5 +150,9 @@ public class StompClient {
 
     public void disconnect() {
         socket.close();
+    }
+
+    public void unsubscribe(String channel) {
+        router.unsubscribe(channel);
     }
 }

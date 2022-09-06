@@ -63,6 +63,17 @@ public class StompHandler {
         subscribe("/player/%s".formatted(player), packetHandler::handlePlayer);
     }
 
+    public void unsubscribe(UUID player) {
+        unsubscribe("/player/%s".formatted(player));
+    }
+
+    public void unsubscribe(String channel) {
+        if (client.isConnected()) {
+            queuedSubscriptions.remove(channel);
+            client.unsubscribe(channel);
+        }
+    }
+
     private synchronized void subscribe(String channel, MessageListener handler) {
         queuedSubscriptions.put(channel, handler);
         doSubscriptions();

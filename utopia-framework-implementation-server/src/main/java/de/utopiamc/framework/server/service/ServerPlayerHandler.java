@@ -39,6 +39,6 @@ public class ServerPlayerHandler extends CommonPlayerHandler {
 
     @Override
     public void quit(UUID uuid) {
-
+        super.quit(uuid);
     }
 }
