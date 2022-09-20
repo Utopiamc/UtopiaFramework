@@ -53,6 +53,8 @@ public class ApplicationContext implements Context, DropInHoldable {
         eventConverter = getEventConverter();
 
         registerCommonPackets();
+
+        dropIns.forEach(d -> d.enable(this));
     }
 
     private void registerCommonPackets() {
@@ -118,6 +120,11 @@ public class ApplicationContext implements Context, DropInHoldable {
 
     public Injector getGuiceInjector() {
         return guiceInjector;
+    }
+
+    @Override
+    public <T> T getInstance(Class<T> type) {
+        return guiceInjector.getInstance(type);
     }
 
     @Override

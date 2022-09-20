@@ -10,6 +10,7 @@
         </processorPath>
         <module name="utopia-framework.main" />
         <module name="utopia-framework.modules.server-module.main" />
+        <module name="Oskar.utopia-framework.utopia-framework-proxy-api.main" />
         <module name="utopia-framework.tests.main" />
         <module name="utopia-framework.utopia-framework-implementation-server.main" />
         <module name="utopia-framework.utopia-framework-backend-worker.main" />

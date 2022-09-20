@@ -41,4 +41,9 @@ allprojects {
     test {
         useJUnitPlatform()
     }
+
+    compileJava {
+        options.compilerArgs << '-parameters'
+    }
+
 }

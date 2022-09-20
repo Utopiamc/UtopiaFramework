@@ -82,7 +82,6 @@ public class ServerFrameworkPlayerService implements FrameworkPlayerService {
 
     @Override
     public FrameworkPlayer get(UUID uuid) {
-        System.out.println(uuidCache);
         loadCacheIfNotPresent(uuid);
 
         ServerPlayerCache cache = uuidCache.get(uuid);
@@ -105,7 +104,6 @@ public class ServerFrameworkPlayerService implements FrameworkPlayerService {
             ServerPlayerCache newCache = requestService.get("/player")
                     .queryParam("uuid", uuid.toString())
                     .execute(ServerPlayerCache.class);
-            System.out.println(newCache);
             uuidCache.put(uuid, newCache);
             nameCache.put(newCache.name, newCache);
         } catch (IOException e) {

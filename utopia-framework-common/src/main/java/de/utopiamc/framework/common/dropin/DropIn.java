@@ -2,6 +2,7 @@ package de.utopiamc.framework.common.dropin;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import de.utopiamc.framework.api.context.Context;
 import de.utopiamc.framework.api.dropin.DropInBinder;
 import de.utopiamc.framework.api.dropin.inject.ClassDetails;
 import de.utopiamc.framework.api.event.EventSubscription;
@@ -17,6 +18,8 @@ public final class DropIn {
 
     private final Logger logger;
 
+    private final Set<Runnable> tasks = new HashSet<>();
+
     private final Set<ClassDetails> classDetails;
     private final Set<EventSubscription> eventSubscriptions;
 
@@ -29,6 +32,7 @@ public final class DropIn {
 
     public void configure(Binder binder) {
         DropInBinder dropInBinder = new DropInBinder() {
+
             @Override
             public Binder binder() {
                 return binder;
@@ -37,6 +41,11 @@ public final class DropIn {
             @Override
             public void addEventSubscription(EventSubscription eventSubscription) {
                 eventSubscriptions.add(eventSubscription);
+            }
+
+            @Override
+            public void registerTask(Runnable runnable) {
+                tasks.add(runnable);
             }
         };
 
@@ -47,6 +56,14 @@ public final class DropIn {
 
     public Module createDropInModule() {
         return new DropInModule(this);
+    }
+
+    public void enable(Context context) {
+        for (Runnable task : tasks) {
+            if (task instanceof CommandRegisterTask)
+                ((CommandRegisterTask) task).setContext(context);
+            task.run();
+        }
     }
 
     public void dispatchEvent(FrameworkEvent event, ApplicationContext context) {

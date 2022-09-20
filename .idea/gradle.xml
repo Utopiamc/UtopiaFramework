@@ -23,10 +23,12 @@
             <option value="$PROJECT_DIR$/utopia-framework-implementation-proxy" />
             <option value="$PROJECT_DIR$/utopia-framework-implementation-server" />
             <option value="$PROJECT_DIR$/utopia-framework-intellij-plugin" />
+            <option value="$PROJECT_DIR$/utopia-framework-proxy-api" />
             <option value="$PROJECT_DIR$/utopia-framework-server-api" />
           </set>
         </option>
       </GradleProjectSettings>
     </option>
+    <option name="offlineMode" value="true" />
   </component>
 </project>

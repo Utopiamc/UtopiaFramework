@@ -7,7 +7,11 @@ import java.util.UUID;
 
 public interface Context extends EventDispatchable {
 
-    Injector getGuiceInjector();
+    default Injector getGuiceInjector() {
+        throw new IllegalStateException();
+    }
+
+    <T> T getInstance(Class<T> type);
 
     FrameworkPlayer getFrameworkPlayer(UUID holder);
 }
