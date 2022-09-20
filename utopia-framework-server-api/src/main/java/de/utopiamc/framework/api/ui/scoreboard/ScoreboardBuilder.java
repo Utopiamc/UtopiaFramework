@@ -6,6 +6,9 @@ public interface ScoreboardBuilder {
     ScoreboardBuilder shouldSpaceLines(Boolean value);
     ScoreboardBuilder shouldSpaceLines(Integer space);
 
+    ScoreboardBuilder titlePrefix(String prefix);
+    ScoreboardBuilder contentPrefix(String prefix);
+
     StaticScoreboardLineBuilder addLine();
     DynamicScoreboardLineBuilder addDynamicLine();
 
