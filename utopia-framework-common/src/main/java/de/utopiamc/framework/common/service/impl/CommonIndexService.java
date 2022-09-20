@@ -53,16 +53,13 @@ public class CommonIndexService implements IndexService {
                 config = new JarFileConfig();
 
                 for (Element child : rootElement.getChildren()) {
-                    System.out.println(child);
                     switch (child.getName().toLowerCase()) {
                         case "modules" -> {
                             List<String> modules = new ArrayList<>();
                             for (Element module : child.getChildren()) {
-                                System.out.println(module);
                                 if (!module.getName().equalsIgnoreCase("module"))
                                     continue;
                                 for (Element moduleChild : module.getChildren()) {
-                                    System.out.println(moduleChild);
                                     if (!moduleChild.getName().equalsIgnoreCase("class"))
                                         continue;
                                     modules.add(moduleChild.getText());
@@ -88,7 +85,7 @@ public class CommonIndexService implements IndexService {
                 }
             }
 
-            JarFileIndex jarFileIndex = new JarFileIndex(file.getName().substring(0, file.getName().length()-3), classLoader, scanClasses(classLoader, config.getSearchPoints()), config);
+            JarFileIndex jarFileIndex = new JarFileIndex(file.getName().substring(0, file.getName().length()-4), classLoader, scanClasses(classLoader, config.getSearchPoints()), config);
 
             logger.info(String.format("Indexed '%s' successfully. Found %s modules and %s classes.", jarFileIndex.name(), config.getModules().size(), jarFileIndex.classes().size()));
 

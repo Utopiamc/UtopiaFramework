@@ -87,7 +87,6 @@ public class CommonDropInBootstrapService implements DropInBootstrapService {
 
     @Override
     public Set<AbstractDropInModule> createDropInModules(Set<Class<? extends AbstractDropInModule>> dropInModules) {
-        System.out.println(dropInService);
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
             protected void configure() {

@@ -8,5 +8,7 @@ public interface DropInBinder {
     Binder binder();
 
     void addEventSubscription(EventSubscription eventSubscription);
+
+    void registerTask(Runnable runnable);
 }
 

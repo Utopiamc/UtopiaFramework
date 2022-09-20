@@ -18,7 +18,8 @@ public class CommonColorService implements ColorService {
     }
 
     @Override
-    public String translateColors(String string) {
+    public String translateColors(String string, boolean error) {
+        string = new String(new char[]{COLOR_SYMBOL, 'r'}) + string;
         char[] chars = string.toCharArray();
 
         for (int i = 0; i < chars.length - 1; i++) {
@@ -33,11 +34,16 @@ public class CommonColorService implements ColorService {
                     else if (key == 'e')
                         chars[i+1] = metaConfig.getErrorColor();
                     else
-                        chars[i+1] = metaConfig.getTextColor();
+                        chars[i+1] = error ? metaConfig.getErrorColor() : metaConfig.getTextColor();
                 }
             }
         }
 
         return new String(chars).replaceAll("&", "§");
+    }
+
+    @Override
+    public String translateColors(String string) {
+        return translateColors(string, false);
     }
 }

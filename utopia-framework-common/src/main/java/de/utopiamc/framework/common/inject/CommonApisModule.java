@@ -1,6 +1,7 @@
 package de.utopiamc.framework.common.inject;
 
 import com.google.inject.AbstractModule;
+import de.utopiamc.framework.api.entity.PlayerServiceHolder;
 import de.utopiamc.framework.api.packets.PacketTypeRegistry;
 import de.utopiamc.framework.api.service.ColorService;
 import de.utopiamc.framework.api.service.EconomyService;
@@ -26,5 +27,7 @@ public class CommonApisModule extends AbstractModule {
         bind(StompHandler.class).asEagerSingleton();
         bind(PacketHandler.class).asEagerSingleton();
         bind(PacketTypeRegistry.class).to(PacketHandler.class);
+
+        requestStaticInjection(PlayerServiceHolder.class);
     }
 }

@@ -42,7 +42,7 @@ public class CachedDropInService implements DropInService {
 
     private ClassDetails scanClass(Class<?> cls) {
         Set<StereotypeResolver> resolvers = AnnotationUtil.getAnnotationsWithAnnotation(cls, Stereotype.class).stream()
-                .map((s) -> stereotypes.get(s.annotationType()))
+                .map((s) -> this.stereotypes.get(s.annotationType()))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
