@@ -27,6 +27,9 @@ public class ServerScoreboardBuilder implements ScoreboardBuilder {
     private Integer spaceBetweenLines = DEFAULT_SPACE_BETWEEN_LINES;
     private LinkedList<ServerScoreboardLineBuilder> lineBuilders;
 
+    private String titlePrefix = "$p&l";
+    private String contentPrefix = "» $s";
+
     public ServerScoreboardBuilder(ColorService colorService, TempEventService eventService, FrameworkPlayerService playerService, UtopiaMetaConfig metaConfig) {
         this.colorService = colorService;
         this.eventService = eventService;
@@ -51,6 +54,18 @@ public class ServerScoreboardBuilder implements ScoreboardBuilder {
     @Override
     public ScoreboardBuilder shouldSpaceLines(Integer space) {
         this.spaceBetweenLines = space;
+        return this;
+    }
+
+    @Override
+    public ScoreboardBuilder titlePrefix(String prefix) {
+        this.titlePrefix = prefix;
+        return this;
+    }
+
+    @Override
+    public ScoreboardBuilder contentPrefix(String prefix) {
+        this.contentPrefix = prefix;
         return this;
     }
 
@@ -83,5 +98,13 @@ public class ServerScoreboardBuilder implements ScoreboardBuilder {
 
     public LinkedList<ServerScoreboardLineBuilder> getLineBuilders() {
         return lineBuilders;
+    }
+
+    public String getTitlePrefix() {
+        return titlePrefix;
+    }
+
+    public String getContentPrefix() {
+        return contentPrefix;
     }
 }

@@ -3,6 +3,7 @@ package de.utopiamc.framework.module.server.model;
 import de.utopiamc.framework.api.entity.ServerFrameworkPlayer;
 import de.utopiamc.framework.api.ui.scoreboard.DynamicScoreboardLineBuilder;
 import de.utopiamc.framework.api.ui.scoreboard.ScoreboardLineUpdater;
+import de.utopiamc.framework.api.ui.scoreboard.ScoreboardSubscribeable;
 import de.utopiamc.framework.module.server.IntegerFunction;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -29,20 +30,32 @@ public class ServerDynamicScoreboardLineBuilder extends ServerScoreboardLineBuil
     }
 
     @Override
+    public DynamicScoreboardLineBuilder setTitle(ScoreboardSubscribeable title) {
+        title.subscribe(setTitle());
+        return this;
+    }
+
+    @Override
     public DynamicScoreboardLineBuilder setContent(String content) {
         this.content = content;
         return this;
     }
 
     @Override
+    public DynamicScoreboardLineBuilder setContent(ScoreboardSubscribeable content) {
+        content.subscribe(setContent());
+        return this;
+    }
+
+    @Override
     public ScoreboardLineUpdater setTitle() {
-        this.titleUpdater = new ServerScoreboardLineUpdater(this::setTeamValue);
+        this.titleUpdater = new ServerScoreboardLineUpdater(this::setTeamValue, builder::getTitlePrefix);
         return titleUpdater;
     }
 
     @Override
     public ScoreboardLineUpdater setContent() {
-        this.contentUpdater = new ServerScoreboardLineUpdater(this::setTeamValue);
+        this.contentUpdater = new ServerScoreboardLineUpdater(this::setTeamValue, builder::getContentPrefix);
         return contentUpdater;
     }
 
@@ -58,14 +71,14 @@ public class ServerDynamicScoreboardLineBuilder extends ServerScoreboardLineBuil
 
     @Override
     public void registerLine(IntegerFunction integerFunction, Objective objective, ServerFrameworkPlayer player) {
-        registerLine(integerFunction, objective, player, title, titleUpdater);
-        registerLine(integerFunction, objective, player, content, contentUpdater);
+        registerLine(integerFunction, objective, player, title, titleUpdater, builder.getTitlePrefix());
+        registerLine(integerFunction, objective, player, content, contentUpdater, builder.getContentPrefix());
     }
 
-    private void registerLine(IntegerFunction integerFunction, Objective objective, ServerFrameworkPlayer player, String value, ServerScoreboardLineUpdater scoreboardLineUpdater) {
+    private void registerLine(IntegerFunction integerFunction, Objective objective, ServerFrameworkPlayer player, String value, ServerScoreboardLineUpdater scoreboardLineUpdater, String prefix) {
         if (value != null) {
             Integer integer = integerFunction.get();
-            objective.getScore(builder.colorService.translateColors(value)).setScore(integer);
+            objective.getScore(builder.colorService.translateColors(prefix + value)).setScore(integer);
         } else if (scoreboardLineUpdater != null) {
             Integer integer = integerFunction.get();
 

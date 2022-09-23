@@ -9,6 +9,7 @@ import de.utopiamc.framework.api.entity.FrameworkPlayer;
 import de.utopiamc.framework.api.service.MessageService;
 import de.utopiamc.framework.api.service.ScoreboardFactory;
 import de.utopiamc.framework.api.stereotype.Command;
+import de.utopiamc.framework.api.ui.scoreboard.Subscribeables;
 
 /**
  * /test kill Leon_lp9
@@ -30,8 +31,10 @@ public class TestCommand {
 
     @MapRoute("<Player>")
     public void deineMudda(MessageService messageService, @Variable("player")FrameworkPlayer player) {
-        factory.createScoreboard().addLine().setTitle("$pTrix")
-                .setContent("$sdu wurdest ausgetrixt.")
+        factory.createScoreboard()
+                .addDynamicLine()
+                .setTitle("Spieler")
+                .setContent(Subscribeables.playerCount())
                 .build()
                 .bind(player);
     }

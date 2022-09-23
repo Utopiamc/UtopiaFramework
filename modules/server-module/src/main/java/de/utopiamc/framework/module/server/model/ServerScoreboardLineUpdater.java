@@ -7,16 +7,19 @@ import org.bukkit.scoreboard.Team;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class ServerScoreboardLineUpdater implements ScoreboardLineUpdater {
 
     private final Map<UUID, Team> player;
     private final Updater updater;
+    private final Supplier<String> prefix;
 
     private OnBound onBound;
 
-    public ServerScoreboardLineUpdater(Updater updater) {
+    public ServerScoreboardLineUpdater(Updater updater, Supplier<String> prefix) {
         this.updater = updater;
+        this.prefix = prefix;
         this.player = new HashMap<>();
     }
 
@@ -33,7 +36,7 @@ public class ServerScoreboardLineUpdater implements ScoreboardLineUpdater {
         if (value == null)
             throw new IllegalArgumentException("Value must not be null.");
 
-        player.forEach((p, t) -> updater.updateTeam(value, t));
+        player.forEach((p, t) -> updater.updateTeam(prefix.get()+ value, t));
     }
 
     @Override
@@ -45,7 +48,7 @@ public class ServerScoreboardLineUpdater implements ScoreboardLineUpdater {
 
         Team team = player.get(target);
         if (team != null)
-            updater.updateTeam(value, team);
+            updater.updateTeam(prefix.get() + value, team);
     }
 
     @Override
@@ -54,7 +57,7 @@ public class ServerScoreboardLineUpdater implements ScoreboardLineUpdater {
     }
 
     public String onBound(ServerFrameworkPlayer player) {
-        return onBound.handle(player);
+        return prefix.get() + onBound.handle(player);
     }
 
     public interface Updater {

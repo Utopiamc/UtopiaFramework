@@ -39,9 +39,9 @@ public class ServerStaticScoreboardLineBuilder extends ServerScoreboardLineBuild
     @Override
     public void registerLine(IntegerFunction integerFunction, Objective objective, ServerFrameworkPlayer player) {
         if (title != null)
-            objective.getScore(builder.colorService.translateColors(title)).setScore(integerFunction.get());
+            objective.getScore(builder.colorService.translateColors(builder.getTitlePrefix() + title)).setScore(integerFunction.get());
 
         if (content != null)
-            objective.getScore(builder.colorService.translateColors(content)).setScore(integerFunction.get());
+            objective.getScore(builder.colorService.translateColors(builder.getContentPrefix() + content)).setScore(integerFunction.get());
     }
 }
