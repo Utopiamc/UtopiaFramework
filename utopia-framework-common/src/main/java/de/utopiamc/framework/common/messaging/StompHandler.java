@@ -33,7 +33,7 @@ public class StompHandler {
 
     @Inject
     private void connect() {
-        client = StompClient.connectOverWebSocket("ws://localhost:8080/events", new StompListener() {
+        client = StompClient.connectOverWebSocket("ws://balance.utopiamc.de:8080/events", new StompListener() {
             @Override
             public void connectionSuccess(StompClient connection) {
                 doSubscriptions();

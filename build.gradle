@@ -1,9 +1,11 @@
 group 'de.utopiamc'
-version '1.0-SNAPSHOT'
+version '1.0-RELEASE'
 
 allprojects {
     apply plugin: 'java'
     apply plugin: 'java-library'
+
+    apply plugin: "maven-publish"
 
     apply from: "$rootProject.projectDir/dependencies.gradle"
     apply from: "$rootProject.projectDir/secrets.gradle"
@@ -44,6 +46,24 @@ allprojects {
 
     compileJava {
         options.compilerArgs << '-parameters'
+    }
+
+    publishing {
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/utopiamc/utopiaframework")
+                credentials {
+                    username = secrets.githubUsername
+                    password = secrets.githubToken
+                }
+            }
+        }
+        publications {
+            gpr(MavenPublication) {
+                from(components.java)
+            }
+        }
     }
 
 }
