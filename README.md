@@ -29,7 +29,7 @@ Maven
     <dependency>
         <groupId>de.utopiamc</groupId>
         <artifactId>utopia-framework-api</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.2-SNAPSHOT</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
