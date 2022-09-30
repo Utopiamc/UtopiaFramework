@@ -19,7 +19,7 @@ Just create a new Gradle *(recommended)* or Maven project. Authenticate with Git
 Gradle *recommended*
 ```groovy
 dependencies {
-    compileOnly "de.utopiamc:utopia-framework-api:1.0-SNAPSHOT"
+    compileOnly "de.utopiamc:utopia-framework-api:1.2-RELEASE"
 }
 ```
 
@@ -29,33 +29,13 @@ Maven
     <dependency>
         <groupId>de.utopiamc</groupId>
         <artifactId>utopia-framework-api</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2-RELEASE</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
 ```
 
 ### Some Code
-
-Right before you start, you should know that we have lied to you. 😒
-It's not *sooo* simple to start. First, you have to create a `manifest.json` file.
-
-It should look like something like this:
-```json
-{
-  "man-version": 1,
-  "global": {
-    "version": "1.0-SNAPSHOT"
-  },
-
-  "plugin": [
-    {
-      "id": "ANiceAndHandyId",
-      "entrypoint": "de.utopiamc.demo.OhYeah"
-    }
-  ]
-}
-```
 
 And then you could start:
 
@@ -68,7 +48,7 @@ import de.utopiamc.framework.api.event.qualifier.Player;
 import de.utopiamc.framework.api.stereotype.Controller;
 import de.utopiamc.framework.api.inject.components.DropIn;
 
-@DropIn
+@Plugin
 @Controller
 public final class OhYeah {
 
@@ -77,19 +57,111 @@ public final class OhYeah {
 
     @OnEnable
     public void onEnable() {
-        logger.log("Yes we did it!");
+        logger.info("Yes we did it!");
     }
 
     @OnDisable
     public void iCanNameThisWhatEverIWant() {
-        logger.log("Good bye!");
+        logger.info("Good bye!");
     }
 
     @Subscribe(event = FrameworkPlayerJoinEvent.class)
     public void onJoin(@Player Player joined) {
-        logget.log(String.format("OMG, '%s' just joined!", joined.getName()));
+        logget.info(String.format("OMG, '%s' just joined!", joined.getName()));
     }
 
 }
 ```
 
+### Config
+
+You need custom Config to change the color scheme?
+There it is: 
+
+```java
+import de.utopiamc.framework.api.config.meta.UtopiaMetaConfig;
+import de.utopiamc.framework.api.config.meta.UtopiaMetaConfiguration;
+import de.utopiamc.framework.api.stereotype.Configuration;
+
+@Configuration
+public class VeryCoolConfig implements UtopiaMetaConfiguration {
+
+    @Override
+    public void configure(UtopiaMetaConfig config) {
+        config.primaryColor('c').secondaryColor('b'); //Use the normal Minecraft color codes!
+    }
+}
+```
+
+## Cool Addons
+### Scoreboard
+Have you always wanted to create a scoreboard quickly and easily? <br>
+![Demo](https://media.discordapp.net/attachments/748504230738001961/1025148491426709504/unknown.png)
+```java
+import com.google.inject.Inject;
+import de.utopiamc.framework.api.info.ServerName;
+import de.utopiamc.framework.api.service.ScoreboardFactory;
+import de.utopiamc.framework.api.ui.scoreboard.Subscribeables;
+
+public class ScoreboardCreator {
+    
+    @Inject
+    public void setupScoreboard(ScoreboardFactory factory, @ServerName String serverName) {
+        factory
+                .createScoreboard()
+                
+                .addLine()
+                .setTitle("Hello")
+                .setContent("What's up?")
+                .and()
+                
+                .addDynamicLine()
+                .setTitle("Server")
+                .setContent(serverName)
+                .and()
+                
+                .addDynamicLine()
+                .setTitle("Spieler")
+                .setContent(Subscribeables.playerCount())
+                
+                .build()
+                .autoBind();
+    }
+}
+```
+### Command Creator
+Do you keep forgetting to register your commands? Then just leave it alone! 🤟🏻
+```java
+import de.utopiamc.framework.api.commands.CommandConfig;
+import de.utopiamc.framework.api.commands.descriptors.Configure;
+import de.utopiamc.framework.api.commands.descriptors.MapRoute;
+import de.utopiamc.framework.api.commands.descriptors.Variable;
+import de.utopiamc.framework.api.service.MessageService;
+import de.utopiamc.framework.api.stereotype.Command;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+
+@Command(value = "niceCommand", aliases = {"nc", "niceC"})
+public class CommandCreator {
+
+    @Configure
+    public void configure(CommandConfig descriptor) {
+        descriptor
+                .description("This is a nice command")
+                .neededPermission("nice.command")
+                .primaryColor('a'); // This is the color of the command Prefix
+    }
+    
+    @MapRoute("")
+    public void Command(MessageService messageService) {
+        messageService.sendMessage("$p Command outout");
+    }
+
+    @MapRoute("<NameOfVar>") // @MapRoute("JiggleJiggle <NameOfVar>")
+    public void RequiresAtLeastOneInput(MessageService messageService, Player player, @Variable("NameOfVar") Sound varName) {
+        messageService.sendMessage("$pHello World!"); // Use $p to get the primaryColor
+        player.playSound(player.getLocation(), varName, 1, 1);
+    }
+
+}
+```
