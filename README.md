@@ -3,6 +3,11 @@
 
 The Bukkit API sucks, right? So we have (as many others) created a much nicer API. It supports Dependency Injection, automated commands and an entire new event system out of the box. If you need more features, the framework is extendable. You can install modules, our implementation or *your own*! 😁
 
+[![GitHub stars](https://badgen.net/github/stars/Utopiamc/UtopiaFramework)](https://GitHub.comUtopiamc/UtopiaFramework/)
+[![GitHub tag](https://img.shields.io/github/last-commit/Utopiamc/UtopiaFramework.svg)](https://GitHub.com/Utopiamc/UtopiaFramework/last-commit/)
+[![GitHub contributors](https://badgen.net/github/contributors/Utopiamc/UtopiaFramework)](https://GitHub.com/Utopiamc/UtopiaFramework/graphs/contributors/)
+<br>
+![Discord Banner 2](https://discordapp.com/api/guilds/746669192241086504/widget.png?style=banner2)
 
 
 ## Features
