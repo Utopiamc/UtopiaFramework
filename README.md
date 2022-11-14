@@ -8,7 +8,7 @@ The Bukkit API sucks, right? So we have (as many others) created a much nicer AP
 [![GitHub contributors](https://badgen.net/github/contributors/Utopiamc/UtopiaFramework)](https://GitHub.com/Utopiamc/UtopiaFramework/graphs/contributors/)
 <br>
 ![Discord Banner 2](https://discordapp.com/api/guilds/746669192241086504/widget.png?style=banner2)
-
+![Join](https://minecraft-mp.com/banner-312108-6.png)
 
 ## Features
 
